@@ -1,26 +1,61 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { TreeViewProvider } from './providers/TreeViewProvider';
+import { handlers } from './handlers';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	// Register the Tree View
+	const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+	const treeDataProvider = new TreeViewProvider(workspaceRoot);
+	vscode.window.registerTreeDataProvider('eplusTestsView', treeDataProvider);
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "eureka-plus-vscode" is now active!');
+	// Register a command to refresh the Tree View
+	context.subscriptions.push(
+		vscode.commands.registerCommand('eureka-plus-vscode.refreshTreeView', () => {
+			treeDataProvider.refresh();
+		})
+	);
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('eureka-plus-vscode.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from eureka-plus-vscode!');
-	});
+	// Register a command to open files
+	context.subscriptions.push(
+		vscode.commands.registerCommand('eureka-plus-vscode.openFile', (resourceUri: vscode.Uri) => {
+			vscode.window.showTextDocument(resourceUri);
+		})
+	);
 
-	context.subscriptions.push(disposable);
+	// Register a command to install all playwright dependencies
+	context.subscriptions.push(
+		vscode.commands.registerCommand('eureka-plus-vscode.installDependencies', (resourceUri: vscode.Uri) => {
+			handlers.installDependencies(context);
+		})
+	);
+
+	// Register a command to start a new test recording
+	context.subscriptions.push(
+		vscode.commands.registerCommand('eureka-plus-vscode.recordNewTest', (resourceUri: vscode.Uri) => {
+			handlers.startNewTestRecording(context);
+		})
+	);
+
+	// context.subscriptions.push(
+	// 	vscode.commands.registerCommand('eureka-plus-vscode.addTestFile', async () => {
+	// 		if (!workspaceRoot) {
+	// 			vscode.window.showErrorMessage('No workspace folder found');
+	// 			return;
+	// 		}
+
+	// 		const fileName = await vscode.window.showInputBox({
+	// 			placeHolder: 'Enter the name of the new test file (e.g., newTest.spec.ts)',
+	// 		});
+
+	// 		if (fileName) {
+	// 			const filePath = path.join(workspaceRoot, 'eplus-tests', fileName);
+	// 			fs.writeFileSync(filePath, '// New test file content', 'utf8');
+	// 			vscode.window.showInformationMessage(`Test file created: ${fileName}`);
+	// 			treeDataProvider.refresh();
+	// 		}
+	// 	})
+	// );
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }

@@ -1,23 +1,67 @@
 {
   "name": "eureka-plus-vscode",
-  "displayName": "eureka-plus-vscode",
-  "description": "",
+  "displayName": "Eureka+ eGain",
+  "description": "UI Testing for the everyday man",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.98.0"
   },
   "categories": [
-    "Other"
+    "Testing"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
+    "views": {
+      "test": [
+        {
+          "icon": "$(flame)",
+          "id": "eplusTestsView",
+          "name": "Eureka+"
+        }
+      ]
+    },
     "commands": [
       {
-        "command": "eureka-plus-vscode.helloWorld",
-        "title": "Hello World"
+        "command": "eureka-plus-vscode.refreshTreeView",
+        "title": "Refresh Tree View",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "eureka-plus-vscode.openFile",
+        "title": "Open File"
+      },
+      {
+        "command": "eureka-plus-vscode.installDependencies",
+        "title": "Install Playwright Dependencies"
+      },
+      {
+        "command": "eureka-plus-vscode.recordNewTest",
+        "title": "Record New Test",
+        "icon": "$(record)"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "eureka-plus-vscode.refreshTreeView",
+          "when": "view == eplusTestsView",
+          "group": "navigation"
+        },
+        {
+          "command": "eureka-plus-vscode.recordNewTest",
+          "when": "view == eplusTestsView",
+          "group": "navigation"
+        },
+        {
+          "command": "eureka-plus-vscode.installDependencies",
+          "when": "view == eplusTestsView",
+          "group": "inline"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -28,14 +72,17 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.98.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
+    "@types/vscode": "^1.98.0",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
-    "eslint": "^9.21.0",
-    "typescript": "^5.7.3",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.21.0",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "playwright": "https://github.com/eureka-egain/eureka-plus/releases/download/1.51.0-1.0.0/pw.tgz"
   }
 }
