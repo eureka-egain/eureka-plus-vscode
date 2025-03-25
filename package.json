@@ -1,5 +1,5 @@
 {
-  "name": "eureka-plus-vscode",
+  "name": "eureka.plus",
   "displayName": "Eureka+ eGain",
   "description": "UI Testing for the everyday man",
   "version": "0.0.1",
@@ -18,10 +18,10 @@
       "type": "object",
       "title": "Eureka+ Settings",
       "properties": {
-        "eureka-plus-vscode.testsFolderName": {
+        "eureka.plus.testsFolderName": {
           "type": "string",
           "default": "eplus-tests",
-          "description": "Folder where the Eureka+ tests are located and new tests are recorded"
+          "description": "Specifies the folder where Eureka+ reads existing tests and records new ones. This folder should be located within your workspace."
         }
       }
     },
@@ -36,54 +36,54 @@
     },
     "commands": [
       {
-        "command": "eureka-plus-vscode.extensionSettings",
+        "command": "eureka.plus.extensionSettings",
         "title": "Settings",
         "icon": "$(gear)"
       },
       {
-        "command": "eureka-plus-vscode.installDependencies",
+        "command": "eureka.plus.installDependencies",
         "title": "Install Playwright Dependencies"
       },
       {
-        "command": "eureka-plus-vscode.refreshTreeView",
+        "command": "eureka.plus.refreshTreeView",
         "title": "Refresh",
         "icon": "$(refresh)"
       },
       {
-        "command": "eureka-plus-vscode.recordNewTest",
+        "command": "eureka.plus.recordNewTest",
         "title": "Record New Test",
         "icon": "$(record)"
       },
       {
-        "command": "eureka-plus-vscode.runAllTests",
+        "command": "eureka.plus.runAllTests",
         "title": "Run All Tests",
         "icon": "$(run-all)"
       },
       {
-        "command": "eureka-plus-vscode.openFile",
+        "command": "eureka.plus.openFile",
         "title": "Open File"
       },
       {
-        "command": "eureka-plus-vscode.folderSelect",
+        "command": "eureka.plus.folderSelect",
         "title": "Folder Select"
       },
       {
-        "command": "eureka-plus-vscode.reRecordTest",
+        "command": "eureka.plus.reRecordTest",
         "title": "Re-Record Test",
         "icon": "$(issue-reopened)"
       },
       {
-        "command": "eureka-plus-vscode.viewTestSummary",
+        "command": "eureka.plus.viewTestSummary",
         "title": "View Test Summary",
         "icon": "$(notebook)"
       },
       {
-        "command": "eureka-plus-vscode.runTest",
+        "command": "eureka.plus.runTest",
         "title": "Run Test",
         "icon": "$(play)"
       },
       {
-        "command": "eureka-plus-vscode.runAllTestsInFolder",
+        "command": "eureka.plus.runAllTestsInFolder",
         "title": "Run All Tests in Folder",
         "icon": "$(play-circle)"
       }
@@ -91,49 +91,49 @@
     "menus": {
       "view/item/context": [
         {
-          "command": "eureka-plus-vscode.runAllTestsInFolder",
+          "command": "eureka.plus.runAllTestsInFolder",
           "when": "view == eplusTestsView && viewItem == testFolder",
           "group": "inline"
         },
         {
-          "command": "eureka-plus-vscode.runTest",
+          "command": "eureka.plus.runTest",
           "when": "view == eplusTestsView && viewItem == testFile",
           "group": "inline@1"
         },
         {
-          "command": "eureka-plus-vscode.reRecordTest",
+          "command": "eureka.plus.reRecordTest",
           "when": "view == eplusTestsView && viewItem == testFile",
           "group": "context"
         },
         {
-          "command": "eureka-plus-vscode.viewTestSummary",
+          "command": "eureka.plus.viewTestSummary",
           "when": "view == eplusTestsView && viewItem == testFile",
           "group": "inline@2"
         }
       ],
       "view/title": [
         {
-          "command": "eureka-plus-vscode.extensionSettings",
+          "command": "eureka.plus.extensionSettings",
           "when": "view == eplusTestsView",
           "group": "2_inline@2"
         },
         {
-          "command": "eureka-plus-vscode.installDependencies",
+          "command": "eureka.plus.installDependencies",
           "when": "view == eplusTestsView",
           "group": "2_inline@2"
         },
         {
-          "command": "eureka-plus-vscode.refreshTreeView",
+          "command": "eureka.plus.refreshTreeView",
           "when": "view == eplusTestsView",
           "group": "1_inline@1"
         },
         {
-          "command": "eureka-plus-vscode.recordNewTest",
+          "command": "eureka.plus.recordNewTest",
           "when": "view == eplusTestsView",
           "group": "navigation@2"
         },
         {
-          "command": "eureka-plus-vscode.runAllTests",
+          "command": "eureka.plus.runAllTests",
           "when": "view == eplusTestsView",
           "group": "navigation@1"
         }

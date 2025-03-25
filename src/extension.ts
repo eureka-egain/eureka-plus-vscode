@@ -11,41 +11,32 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Register a command to open extension settings
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "eureka-plus-vscode.extensionSettings",
-      () => {
-        vscode.commands.executeCommand(
-          "workbench.action.openSettings",
-          "eureka-plus-vscode"
-        );
-      }
-    )
+    vscode.commands.registerCommand("eureka.plus.extensionSettings", () => {
+      vscode.commands.executeCommand(
+        "workbench.action.openSettings",
+        "eureka.plus"
+      );
+    })
   );
 
   // Register a command to install all playwright dependencies
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "eureka-plus-vscode.installDependencies",
-      () => {
-        handlers.installDependencies(context);
-      }
-    )
+    vscode.commands.registerCommand("eureka.plus.installDependencies", () => {
+      handlers.installDependencies(context);
+    })
   );
 
   // Register a command to refresh the Tree View
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "eureka-plus-vscode.refreshTreeView",
-      () => {
-        treeDataProvider.refresh();
-      }
-    )
+    vscode.commands.registerCommand("eureka.plus.refreshTreeView", () => {
+      treeDataProvider.refresh();
+    })
   );
 
   // Register a command to start a new test recording
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "eureka-plus-vscode.recordNewTest",
+      "eureka.plus.recordNewTest",
       (resourceUri: vscode.Uri) => {
         handlers.startNewTestRecording({
           context,
@@ -58,7 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Register a command to run all test cases in test folder
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "eureka-plus-vscode.runAllTests",
+      "eureka.plus.runAllTests",
       (resourceUri: vscode.Uri) => {
         // TODO: Implement this
         showInDevelopementNotification();
@@ -69,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Register a command to open files
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "eureka-plus-vscode.openFile",
+      "eureka.plus.openFile",
       (resourceUri: vscode.Uri) => {
         treeDataProvider.selectedFolderPath = undefined;
         vscode.window.showTextDocument(resourceUri);
@@ -80,7 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Register a command that runs when any folder is selected
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "eureka-plus-vscode.folderSelect",
+      "eureka.plus.folderSelect",
       (resourceUri: vscode.Uri) => {
         treeDataProvider.selectedFolderPath = resourceUri.fsPath;
       }
@@ -90,7 +81,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Register a command to start re-recording of test
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "eureka-plus-vscode.reRecordTest",
+      "eureka.plus.reRecordTest",
       (resourceUri: vscode.Uri) => {
         // TODO: Implement this
         showInDevelopementNotification();
@@ -101,7 +92,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Register a command to view AI Generated summaries for tests
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "eureka-plus-vscode.viewTestSummary",
+      "eureka.plus.viewTestSummary",
       (resourceUri: vscode.Uri) => {
         // TODO: Implement this
         showInDevelopementNotification();
@@ -112,7 +103,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Register a command to run the test case
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "eureka-plus-vscode.runTest",
+      "eureka.plus.runTest",
       (resourceUri: vscode.Uri) => {
         // TODO: Implement this
         showInDevelopementNotification();
@@ -123,7 +114,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Register a command to run the test case
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "eureka-plus-vscode.runAllTestsInFolder",
+      "eureka.plus.runAllTestsInFolder",
       (resourceUri: vscode.Uri) => {
         // TODO: Implement this
         showInDevelopementNotification();
