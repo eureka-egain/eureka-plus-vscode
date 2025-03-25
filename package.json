@@ -41,7 +41,7 @@
       },
       {
         "command": "eureka-plus-vscode.refreshTreeView",
-        "title": "Refresh Tree View",
+        "title": "Refresh",
         "icon": "$(refresh)"
       },
       {
@@ -50,8 +50,17 @@
         "icon": "$(record)"
       },
       {
+        "command": "eureka-plus-vscode.runAllTests",
+        "title": "Run All Tests",
+        "icon": "$(run-all)"
+      },
+      {
         "command": "eureka-plus-vscode.openFile",
         "title": "Open File"
+      },
+      {
+        "command": "eureka-plus-vscode.folderSelect",
+        "title": "Folder Select"
       },
       {
         "command": "eureka-plus-vscode.reRecordTest",
@@ -67,10 +76,20 @@
         "command": "eureka-plus-vscode.runTest",
         "title": "Run Test",
         "icon": "$(play)"
+      },
+      {
+        "command": "eureka-plus-vscode.runAllTestsInFolder",
+        "title": "Run All Tests in Folder",
+        "icon": "$(play-circle)"
       }
     ],
     "menus": {
       "view/item/context": [
+        {
+          "command": "eureka-plus-vscode.runAllTestsInFolder",
+          "when": "view == eplusTestsView && viewItem == testFolder",
+          "group": "inline"
+        },
         {
           "command": "eureka-plus-vscode.runTest",
           "when": "view == eplusTestsView && viewItem == testFile",
@@ -79,7 +98,7 @@
         {
           "command": "eureka-plus-vscode.reRecordTest",
           "when": "view == eplusTestsView && viewItem == testFile",
-          "group": "inline"
+          "group": "context"
         },
         {
           "command": "eureka-plus-vscode.viewTestSummary",
@@ -96,10 +115,15 @@
         {
           "command": "eureka-plus-vscode.refreshTreeView",
           "when": "view == eplusTestsView",
-          "group": "navigation"
+          "group": "inline"
         },
         {
           "command": "eureka-plus-vscode.recordNewTest",
+          "when": "view == eplusTestsView",
+          "group": "navigation"
+        },
+        {
+          "command": "eureka-plus-vscode.runAllTests",
           "when": "view == eplusTestsView",
           "group": "navigation"
         }

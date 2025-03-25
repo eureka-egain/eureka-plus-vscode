@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { TreeViewProvider } from './providers/TreeViewProvider';
 import { handlers } from './handlers';
+import { showInDevelopementNotification } from './handlers/common';
 
 export function activate(context: vscode.ExtensionContext) {
 	// Register the Tree View
@@ -25,57 +26,64 @@ export function activate(context: vscode.ExtensionContext) {
 	// Register a command to start a new test recording
 	context.subscriptions.push(
 		vscode.commands.registerCommand('eureka-plus-vscode.recordNewTest', (resourceUri: vscode.Uri) => {
-			handlers.startNewTestRecording(context);
+			handlers.startNewTestRecording({ context, recordFsPath: treeDataProvider.selectedFolderPath });
+		})
+	);
+
+	// Register a command to run all test cases in test folder
+	context.subscriptions.push(
+		vscode.commands.registerCommand('eureka-plus-vscode.runAllTests', (resourceUri: vscode.Uri) => {
+			// TODO: Implement this
+			showInDevelopementNotification();
 		})
 	);
 
 	// Register a command to open files
 	context.subscriptions.push(
 		vscode.commands.registerCommand('eureka-plus-vscode.openFile', (resourceUri: vscode.Uri) => {
+			treeDataProvider.selectedFolderPath = undefined;
 			vscode.window.showTextDocument(resourceUri);
+		})
+	);
+
+	// Register a command that runs when any folder is selected
+	context.subscriptions.push(
+		vscode.commands.registerCommand('eureka-plus-vscode.folderSelect', (resourceUri: vscode.Uri) => {
+			treeDataProvider.selectedFolderPath = resourceUri.fsPath;
 		})
 	);
 
 	// Register a command to start re-recording of test
 	context.subscriptions.push(
 		vscode.commands.registerCommand('eureka-plus-vscode.reRecordTest', (resourceUri: vscode.Uri) => {
-			vscode.window.showTextDocument(resourceUri);
+			// TODO: Implement this
+			showInDevelopementNotification();
 		})
 	);
 
 	// Register a command to view AI Generated summaries for tests
 	context.subscriptions.push(
 		vscode.commands.registerCommand('eureka-plus-vscode.viewTestSummary', (resourceUri: vscode.Uri) => {
-			vscode.window.showTextDocument(resourceUri);
+			// TODO: Implement this
+			showInDevelopementNotification();
 		})
 	);
 
 	// Register a command to run the test case
 	context.subscriptions.push(
 		vscode.commands.registerCommand('eureka-plus-vscode.runTest', (resourceUri: vscode.Uri) => {
-			vscode.window.showTextDocument(resourceUri);
+			// TODO: Implement this
+			showInDevelopementNotification();
 		})
 	);
 
-	// context.subscriptions.push(
-	// 	vscode.commands.registerCommand('eureka-plus-vscode.addTestFile', async () => {
-	// 		if (!workspaceRoot) {
-	// 			vscode.window.showErrorMessage('No workspace folder found');
-	// 			return;
-	// 		}
-
-	// 		const fileName = await vscode.window.showInputBox({
-	// 			placeHolder: 'Enter the name of the new test file (e.g., newTest.spec.ts)',
-	// 		});
-
-	// 		if (fileName) {
-	// 			const filePath = path.join(workspaceRoot, 'eplus-tests', fileName);
-	// 			fs.writeFileSync(filePath, '// New test file content', 'utf8');
-	// 			vscode.window.showInformationMessage(`Test file created: ${fileName}`);
-	// 			treeDataProvider.refresh();
-	// 		}
-	// 	})
-	// );
+	// Register a command to run the test case
+	context.subscriptions.push(
+		vscode.commands.registerCommand('eureka-plus-vscode.runAllTestsInFolder', (resourceUri: vscode.Uri) => {
+			// TODO: Implement this
+			showInDevelopementNotification();
+		})
+	);
 }
 
 // This method is called when your extension is deactivated

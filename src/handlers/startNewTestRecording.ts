@@ -5,7 +5,10 @@ import { exec, spawn } from 'child_process';
 import { getExtensionPath, getExtensionSettings, getWorkspaceRoot } from './common';
 
 
-export default function (context: vscode.ExtensionContext) {
+export default function ({ context, recordFsPath }: {
+    context: vscode.ExtensionContext;
+    recordFsPath: string | undefined;
+}) {
     const playwrightPath = getExtensionPath(context);
     if (!playwrightPath) {
         vscode.window.showErrorMessage('Error: Could not find Playwright');
@@ -59,7 +62,7 @@ export default function (context: vscode.ExtensionContext) {
                             return;
                         }
 
-                        const recordingPath = path.join(workspaceRoot, getExtensionSettings().testsFolderName, recordingName);
+                        const recordingPath = recordFsPath ? path.join(recordFsPath, recordingName) : path.join(workspaceRoot, getExtensionSettings().testsFolderName, recordingName);
                         const recordingSpecFilePath = path.join(recordingPath, `${recordingName}.spec.ts`);
                         const recordingStorageFilePath = path.join(recordingPath, `${recordingName}-storage.json`);
                         const recordingHARFilePath = path.join(recordingPath, `${recordingName}.har`);
@@ -93,6 +96,7 @@ export default function (context: vscode.ExtensionContext) {
                             recordingProcess.on('close', (code) => {
                                 if (code === 0) {
                                     vscode.window.showInformationMessage(`Test recording completed: ${recordingPath}`);
+                                    vscode.workspace.openTextDocument(recordingSpecFilePath).then(vscode.window.showTextDocument);
                                     resolve();
                                 } else {
                                     vscode.window.showErrorMessage(`Test recording process exited with code ${code}`);

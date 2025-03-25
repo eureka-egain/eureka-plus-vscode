@@ -1,7 +1,5 @@
 import * as vscode from 'vscode';
 import path from "path";
-import * as os from 'os';
-import { exec } from 'child_process';
 
 export const getExtensionPath = (context: vscode.ExtensionContext) => {
     const extensionPath = context.extensionPath;
@@ -26,4 +24,10 @@ export const getExtensionSettings = () => {
     return {
         testsFolderName: config.get<string>('testsFolderName') || "eplus-tests",
     };
+};
+
+// ----------------------------------------
+
+export const showInDevelopementNotification = () => {
+    vscode.window.showInformationMessage('This feature is under development');
 };
