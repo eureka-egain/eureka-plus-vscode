@@ -9,6 +9,14 @@ export function activate(context: vscode.ExtensionContext) {
 	const treeDataProvider = new TreeViewProvider(workspaceRoot);
 	vscode.window.registerTreeDataProvider('eplusTestsView', treeDataProvider);
 
+	// Register a command to open extension settings
+	context.subscriptions.push(
+		vscode.commands.registerCommand('eureka-plus-vscode.extensionSettings', (resourceUri: vscode.Uri) => {
+			// TODO: Implement this
+			showInDevelopementNotification();
+		})
+	);
+
 	// Register a command to install all playwright dependencies
 	context.subscriptions.push(
 		vscode.commands.registerCommand('eureka-plus-vscode.installDependencies', (resourceUri: vscode.Uri) => {

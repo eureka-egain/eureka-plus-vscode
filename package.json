@@ -36,6 +36,11 @@
     },
     "commands": [
       {
+        "command": "eureka-plus-vscode.extensionSettings",
+        "title": "View Extension Settings",
+        "icon": "$(gear)"
+      },
+      {
         "command": "eureka-plus-vscode.installDependencies",
         "title": "Install Playwright Dependencies"
       },
@@ -93,7 +98,7 @@
         {
           "command": "eureka-plus-vscode.runTest",
           "when": "view == eplusTestsView && viewItem == testFile",
-          "group": "inline"
+          "group": "inline@1"
         },
         {
           "command": "eureka-plus-vscode.reRecordTest",
@@ -103,29 +108,34 @@
         {
           "command": "eureka-plus-vscode.viewTestSummary",
           "when": "view == eplusTestsView && viewItem == testFile",
-          "group": "inline"
+          "group": "inline@2"
         }
       ],
       "view/title": [
         {
+          "command": "eureka-plus-vscode.extensionSettings",
+          "when": "view == eplusTestsView",
+          "group": "2_inline@2"
+        },
+        {
           "command": "eureka-plus-vscode.installDependencies",
           "when": "view == eplusTestsView",
-          "group": "inline"
+          "group": "2_inline@2"
         },
         {
           "command": "eureka-plus-vscode.refreshTreeView",
           "when": "view == eplusTestsView",
-          "group": "inline"
+          "group": "1_inline@1"
         },
         {
           "command": "eureka-plus-vscode.recordNewTest",
           "when": "view == eplusTestsView",
-          "group": "navigation"
+          "group": "navigation@2"
         },
         {
           "command": "eureka-plus-vscode.runAllTests",
           "when": "view == eplusTestsView",
-          "group": "navigation"
+          "group": "navigation@1"
         }
       ]
     }
