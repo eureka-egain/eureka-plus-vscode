@@ -18,3 +18,12 @@ export const getWorkspaceRoot = () => {
     }
     return workspaceFolders[0].uri.fsPath;
 };
+
+// ----------------------------------------
+
+export const getExtensionSettings = () => {
+    const config = vscode.workspace.getConfiguration('eureka-plus-vscode');
+    return {
+        testsFolderName: config.get<string>('testsFolderName') || "eplus-tests",
+    };
+};

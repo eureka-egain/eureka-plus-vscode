@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
+import * as fs from "fs";
 import path from "path";
-import { exec } from 'child_process';
-import { getExtensionPath, getWorkspaceRoot } from './common';
+import { exec, spawn } from 'child_process';
+import { getExtensionPath, getExtensionSettings, getWorkspaceRoot } from './common';
 
 
 export default function (context: vscode.ExtensionContext) {
@@ -12,8 +13,9 @@ export default function (context: vscode.ExtensionContext) {
     } else {
         // Prompt for the recording name
         vscode.window.showInputBox({
-            prompt: 'Enter the name for the new test recording',
+            prompt: 'Enter the name for the new test recording FUCK',
             placeHolder: 'e.g., create-article-form-invalid-value',
+            ignoreFocusOut: true
         }).then((recordingName) => {
             if (!recordingName) {
                 vscode.window.showErrorMessage('Recording name is required to start the test recording.');
@@ -24,6 +26,8 @@ export default function (context: vscode.ExtensionContext) {
             vscode.window.showInputBox({
                 prompt: 'Enter the initial URL to load for the test recording',
                 placeHolder: 'e.g., http://localhost:3000/work/login',
+                value: "https://microsoft.github.io/vscode-codicons/dist/codicon.html",
+                ignoreFocusOut: true,
                 validateInput: (input) => {
                     try {
                         new URL(input); // Validate if the input is a valid URL
@@ -42,11 +46,11 @@ export default function (context: vscode.ExtensionContext) {
                 vscode.window.withProgress(
                     {
                         location: vscode.ProgressLocation.Notification,
-                        title: 'Eureka+:',
-                        cancellable: false,
+                        title: 'Eureka+',
+                        cancellable: true,
                     },
                     async (progress) => {
-                        progress.report({ message: 'Starting a new test recording...' });
+                        progress.report({ message: 'Test recording in progress' });
 
                         // Use the recording name and initial URL to save the recording
                         const workspaceRoot = getWorkspaceRoot();
@@ -55,23 +59,51 @@ export default function (context: vscode.ExtensionContext) {
                             return;
                         }
 
-                        const recordingPath = path.join(workspaceRoot, `${recordingName}.spec.ts`);
-                        const startRecordingCommand = `${playwrightPath} codegen --save-storage=${recordingName}-storage.json --output=${recordingPath} --ignore-https-errors ${initialUrl}`;
+                        const recordingPath = path.join(workspaceRoot, getExtensionSettings().testsFolderName, recordingName);
+                        const recordingSpecFilePath = path.join(recordingPath, `${recordingName}.spec.ts`);
+                        const recordingStorageFilePath = path.join(recordingPath, `${recordingName}-storage.json`);
+                        const recordingHARFilePath = path.join(recordingPath, `${recordingName}.har`);
+                        const recordingFolder = path.dirname(recordingSpecFilePath); // Get the folder path
+
+                        // Ensure the folder exists
+                        if (!fs.existsSync(recordingFolder)) {
+                            fs.mkdirSync(recordingFolder, { recursive: true }); // Create the folder recursively
+                        }
 
                         await new Promise<void>((resolve, reject) => {
-                            exec(startRecordingCommand, (error, stdout, stderr) => {
-                                if (error) {
-                                    vscode.window.showErrorMessage(`Error starting a new test recording: ${error.message}`);
-                                    reject(error);
-                                    return;
+                            const recordingProcess = spawn(playwrightPath, [
+                                'codegen',
+                                `--output=${recordingSpecFilePath}`,
+                                `--save-storage=${recordingStorageFilePath}`,
+                                `--save-har=${recordingHARFilePath}`,
+                                '--ignore-https-errors',
+                                initialUrl,
+                            ], { shell: true });
+
+                            // Log stdout and stderr for debugging
+                            recordingProcess.stdout.on('data', (data) => {
+                                console.log(`stdout: ${data}`);
+                            });
+
+                            recordingProcess.stderr.on('data', (data) => {
+                                console.error(`stderr: ${data}`);
+                            });
+
+                            // Handle process exit
+                            recordingProcess.on('close', (code) => {
+                                if (code === 0) {
+                                    vscode.window.showInformationMessage(`Test recording completed: ${recordingPath}`);
+                                    resolve();
+                                } else {
+                                    vscode.window.showErrorMessage(`Test recording process exited with code ${code}`);
+                                    reject(new Error(`Process exited with code ${code}`));
                                 }
-                                if (stderr) {
-                                    vscode.window.showErrorMessage(`Stderr: ${stderr}`);
-                                    reject(stderr);
-                                    return;
-                                }
-                                vscode.window.showInformationMessage(`Test recording completed: ${recordingPath}`);
-                                resolve();
+                            });
+
+                            // Handle errors
+                            recordingProcess.on('error', (error) => {
+                                vscode.window.showErrorMessage(`Error starting the test recording: ${error.message}`);
+                                reject(error);
                             });
                         });
                     }

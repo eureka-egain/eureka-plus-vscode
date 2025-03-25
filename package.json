@@ -14,6 +14,17 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Eureka+ Settings",
+      "properties": {
+        "eureka-plus-vscode.testsFolderName": {
+          "type": "string",
+          "default": "eplus-tests",
+          "description": "Folder where the Eureka+ tests are located and new tests are recorded"
+        }
+      }
+    },
     "views": {
       "test": [
         {
