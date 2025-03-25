@@ -8,10 +8,24 @@ export function activate(context: vscode.ExtensionContext) {
 	const treeDataProvider = new TreeViewProvider(workspaceRoot);
 	vscode.window.registerTreeDataProvider('eplusTestsView', treeDataProvider);
 
+	// Register a command to install all playwright dependencies
+	context.subscriptions.push(
+		vscode.commands.registerCommand('eureka-plus-vscode.installDependencies', (resourceUri: vscode.Uri) => {
+			handlers.installDependencies(context);
+		})
+	);
+
 	// Register a command to refresh the Tree View
 	context.subscriptions.push(
 		vscode.commands.registerCommand('eureka-plus-vscode.refreshTreeView', () => {
 			treeDataProvider.refresh();
+		})
+	);
+
+	// Register a command to start a new test recording
+	context.subscriptions.push(
+		vscode.commands.registerCommand('eureka-plus-vscode.recordNewTest', (resourceUri: vscode.Uri) => {
+			handlers.startNewTestRecording(context);
 		})
 	);
 
@@ -22,17 +36,24 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 	);
 
-	// Register a command to install all playwright dependencies
+	// Register a command to start re-recording of test
 	context.subscriptions.push(
-		vscode.commands.registerCommand('eureka-plus-vscode.installDependencies', (resourceUri: vscode.Uri) => {
-			handlers.installDependencies(context);
+		vscode.commands.registerCommand('eureka-plus-vscode.reRecordTest', (resourceUri: vscode.Uri) => {
+			vscode.window.showTextDocument(resourceUri);
 		})
 	);
 
-	// Register a command to start a new test recording
+	// Register a command to view AI Generated summaries for tests
 	context.subscriptions.push(
-		vscode.commands.registerCommand('eureka-plus-vscode.recordNewTest', (resourceUri: vscode.Uri) => {
-			handlers.startNewTestRecording(context);
+		vscode.commands.registerCommand('eureka-plus-vscode.viewTestSummary', (resourceUri: vscode.Uri) => {
+			vscode.window.showTextDocument(resourceUri);
+		})
+	);
+
+	// Register a command to run the test case
+	context.subscriptions.push(
+		vscode.commands.registerCommand('eureka-plus-vscode.runTest', (resourceUri: vscode.Uri) => {
+			vscode.window.showTextDocument(resourceUri);
 		})
 	);
 

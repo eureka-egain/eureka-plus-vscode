@@ -9,12 +9,16 @@ class TreeItem extends vscode.TreeItem {
         resourceUri: string
     ) {
         super(vscode.Uri.file(resourceUri), collapsibleState);
-        this.command = {
-            command: 'eureka-plus-vscode.openFile',
-            title: 'Open File',
-            arguments: [this.resourceUri],
-        };
-        this.contextValue = 'treeItem';
+        if (collapsibleState === vscode.TreeItemCollapsibleState.None) {
+            this.command = {
+                command: 'eureka-plus-vscode.openFile',
+                title: 'Open File',
+                arguments: [this.resourceUri],
+            };
+            this.contextValue = 'testFile';
+        } else {
+            this.contextValue = 'testFolder';
+        }
     }
 }
 

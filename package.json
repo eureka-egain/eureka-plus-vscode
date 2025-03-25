@@ -25,26 +25,63 @@
     },
     "commands": [
       {
+        "command": "eureka-plus-vscode.installDependencies",
+        "title": "Install Playwright Dependencies"
+      },
+      {
         "command": "eureka-plus-vscode.refreshTreeView",
         "title": "Refresh Tree View",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "eureka-plus-vscode.recordNewTest",
+        "title": "Record New Test",
+        "icon": "$(record)"
       },
       {
         "command": "eureka-plus-vscode.openFile",
         "title": "Open File"
       },
       {
-        "command": "eureka-plus-vscode.installDependencies",
-        "title": "Install Playwright Dependencies"
+        "command": "eureka-plus-vscode.reRecordTest",
+        "title": "Re-Record Test",
+        "icon": "$(issue-reopened)"
       },
       {
-        "command": "eureka-plus-vscode.recordNewTest",
-        "title": "Record New Test",
-        "icon": "$(record)"
+        "command": "eureka-plus-vscode.viewTestSummary",
+        "title": "View Test Summary",
+        "icon": "$(notebook)"
+      },
+      {
+        "command": "eureka-plus-vscode.runTest",
+        "title": "Run Test",
+        "icon": "$(play)"
       }
     ],
     "menus": {
+      "view/item/context": [
+        {
+          "command": "eureka-plus-vscode.runTest",
+          "when": "view == eplusTestsView && viewItem == testFile",
+          "group": "inline"
+        },
+        {
+          "command": "eureka-plus-vscode.reRecordTest",
+          "when": "view == eplusTestsView && viewItem == testFile",
+          "group": "inline"
+        },
+        {
+          "command": "eureka-plus-vscode.viewTestSummary",
+          "when": "view == eplusTestsView && viewItem == testFile",
+          "group": "inline"
+        }
+      ],
       "view/title": [
+        {
+          "command": "eureka-plus-vscode.installDependencies",
+          "when": "view == eplusTestsView",
+          "group": "inline"
+        },
         {
           "command": "eureka-plus-vscode.refreshTreeView",
           "when": "view == eplusTestsView",
@@ -54,11 +91,6 @@
           "command": "eureka-plus-vscode.recordNewTest",
           "when": "view == eplusTestsView",
           "group": "navigation"
-        },
-        {
-          "command": "eureka-plus-vscode.installDependencies",
-          "when": "view == eplusTestsView",
-          "group": "inline"
         }
       ]
     }
