@@ -16,24 +16,24 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// OPEN SETTINGS
 	context.subscriptions.push(
-		vscode.commands.registerCommand("eureka.plus.extensionSettings", () => {
+		vscode.commands.registerCommand("egain-eureka-plus.extensionSettings", () => {
 			vscode.commands.executeCommand(
 				"workbench.action.openSettings",
-				"eureka.plus"
+				"eureka+"
 			);
 		})
 	);
 
 	// INSTALL DEPENDENCIES
 	context.subscriptions.push(
-		vscode.commands.registerCommand("eureka.plus.installDependencies", () => {
+		vscode.commands.registerCommand("egain-eureka-plus.installDependencies", () => {
 			handlers.installDependencies(context);
 		})
 	);
 
 	// REFRESH TREE VIEW
 	context.subscriptions.push(
-		vscode.commands.registerCommand("eureka.plus.refreshTreeView", () => {
+		vscode.commands.registerCommand("egain-eureka-plus.refreshTreeView", () => {
 			treeDataProvider.refresh();
 		})
 	);
@@ -43,7 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// START NEW RECORDING
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
-			"eureka.plus.recordNewTest",
+			"egain-eureka-plus.recordNewTest",
 			() => {
 				handlers.startNewTestRecording({
 					context,
@@ -56,7 +56,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// RUN ALL TEST CASES
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
-			"eureka.plus.runAllTests",
+			"egain-eureka-plus.runAllTests",
 			() => {
 				// TODO: Implement this
 				showInDevelopementNotification();
@@ -69,7 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// FOLDER SELECT
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
-			"eureka.plus.selectFolder",
+			"egain-eureka-plus.selectFolder",
 			(resourceUri: vscode.Uri) => {
 				treeDataProvider.selectedFolderPath = resourceUri.fsPath;
 			}
@@ -79,7 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// RUN ALL TESTS IN FOLDER
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
-			"eureka.plus.runAllTestsInFolder",
+			"egain-eureka-plus.runAllTestsInFolder",
 			() => {
 				// TODO: Implement this
 				showInDevelopementNotification();
@@ -92,7 +92,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// OPEN FILE
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
-			"eureka.plus.openFile",
+			"egain-eureka-plus.openFile",
 			(resourceUri: vscode.Uri) => {
 				treeDataProvider.selectedFolderPath = undefined;
 				vscode.window.showTextDocument(resourceUri);
@@ -103,7 +103,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// RE-RECORD TEST
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
-			"eureka.plus.reRecordTest",
+			"egain-eureka-plus.reRecordTest",
 			() => {
 				// TODO: Implement this
 				showInDevelopementNotification();
@@ -114,7 +114,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// VIEW TEST SUMMARY
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
-			"eureka.plus.viewTestSummary",
+			"egain-eureka-plus.viewTestSummary",
 			() => {
 				// TODO: Implement this
 				showInDevelopementNotification();
@@ -125,7 +125,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// RUN TEST
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
-			"eureka.plus.runTest",
+			"egain-eureka-plus.runTest",
 			(resourceUri: any) => {
 				console.log("Running test", resourceUri);
 				const path = resourceUri["resourceUri"]["path"] as string;

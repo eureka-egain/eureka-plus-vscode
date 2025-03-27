@@ -11,7 +11,7 @@ export const getExtensionPath = (context: vscode.ExtensionContext) => {
 // ---------------------------------------------------------------
 
 export const getExtensionSettings = () => {
-    const config = vscode.workspace.getConfiguration('eureka-plus-vscode');
+    const config = vscode.workspace.getConfiguration('egain-eureka-plus');
     return {
         testsFolderName: config.get<string>('testsFolderName') || defaultTestsFolderName,
     };

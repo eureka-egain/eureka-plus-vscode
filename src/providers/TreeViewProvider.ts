@@ -13,14 +13,14 @@ class TreeItem extends vscode.TreeItem {
     const fileExtension = path.extname(resourceUri); // Get the file extension
     if (collapsibleState === vscode.TreeItemCollapsibleState.None) {
       this.command = {
-        command: "eureka.plus.openFile",
+        command: "egain-eureka-plus.openFile",
         title: "Open File",
         arguments: [this.resourceUri],
       };
       this.contextValue = "testFile";
     } else {
       this.command = {
-        command: "eureka.plus.selectFolder",
+        command: "egain-eureka-plus.selectFolder",
         title: "Select Folder",
         arguments: [this.resourceUri],
       };
