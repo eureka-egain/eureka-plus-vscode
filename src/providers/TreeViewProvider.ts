@@ -20,7 +20,7 @@ class TreeItem extends vscode.TreeItem {
       this.contextValue = "testFile";
     } else {
       this.command = {
-        command: "eureka.plus.folderSelect",
+        command: "eureka.plus.selectFolder",
         title: "Select Folder",
         arguments: [this.resourceUri],
       };

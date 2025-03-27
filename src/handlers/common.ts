@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs-extra';
 import path from "path";
 import { spawn } from 'child_process';
+import { defaultTestsFolderName } from '../constants';
 
 export const getExtensionPath = (context: vscode.ExtensionContext) => {
     return context.extensionPath;
@@ -9,39 +10,18 @@ export const getExtensionPath = (context: vscode.ExtensionContext) => {
 
 // ---------------------------------------------------------------
 
-export const getWorkspaceRoot = () => {
-    const workspaceFolders = vscode.workspace.workspaceFolders;
-    if (!workspaceFolders) {
-        vscode.window.showInformationMessage('No workspace folder found');
-        return;
-    }
-    return workspaceFolders[0].uri.fsPath;
-};
-
-// ---------------------------------------------------------------
-
 export const getExtensionSettings = () => {
     const config = vscode.workspace.getConfiguration('eureka-plus-vscode');
     return {
-        testsFolderName: config.get<string>('testsFolderName') || "eplus-tests",
+        testsFolderName: config.get<string>('testsFolderName') || defaultTestsFolderName,
     };
 };
 
 // ---------------------------------------------------------------
 
-export const showInDevelopementNotification = () => {
-    vscode.window.showInformationMessage('This feature is under development');
-};
-
-// ---------------------------------------------------------------
-
-export const getPlaywrightPath = (context: vscode.ExtensionContext) => {
-    const playwrightPath = path.join(getExtensionPath(context), 'node_modules', '.bin', 'playwright');
-    if (!playwrightPath) {
-        vscode.window.showErrorMessage('Error: Could not find Playwright');
-        return false;
-    }
-    return playwrightPath;
+export const getWorkspaceRoot = () => {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    return workspaceFolders?.[0]?.uri?.fsPath;
 };
 
 // ---------------------------------------------------------------
@@ -102,10 +82,10 @@ export const runProcess = ({ command, args, cwd, onError, onExit, onStderr, onSt
 
 export const moveTestResultsFolderToWorkspace = (context: vscode.ExtensionContext) => {
     const workspaceRoot = getWorkspaceRoot();
-    const extensionPath = getExtensionPath(context);
+    const extensionRoot = getExtensionPath(context);
 
     if (workspaceRoot) {
-        const testResultsFolder = path.join(extensionPath, 'test-results');
+        const testResultsFolder = path.join(extensionRoot, 'test-results');
         const destinationFolder = path.join(workspaceRoot, 'test-results');;
 
         if (!fs.existsSync(destinationFolder)) {
@@ -116,5 +96,16 @@ export const moveTestResultsFolderToWorkspace = (context: vscode.ExtensionContex
             fs.moveSync(testResultsFolder, destinationFolder, { overwrite: true });
         }
     }
+};
 
+// ---------------------------------------------------------------
+
+export const sanitizeTestName = (testName: string) => {
+    return testName.replace(/[^a-zA-Z0-9-_]/g, '-').toLowerCase();
+};
+
+// ---------------------------------------------------------------
+
+export const showInDevelopementNotification = () => {
+    vscode.window.showInformationMessage('This feature is under development');
 };

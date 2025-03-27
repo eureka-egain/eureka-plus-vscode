@@ -60,12 +60,17 @@
         "icon": "$(run-all)"
       },
       {
-        "command": "eureka.plus.openFile",
-        "title": "Open File"
+        "command": "eureka.plus.selectFolder",
+        "title": "Folder Select"
       },
       {
-        "command": "eureka.plus.folderSelect",
-        "title": "Folder Select"
+        "command": "eureka.plus.runAllTestsInFolder",
+        "title": "Run All Tests in Folder",
+        "icon": "$(play-circle)"
+      },
+      {
+        "command": "eureka.plus.openFile",
+        "title": "Open File"
       },
       {
         "command": "eureka.plus.reRecordTest",
@@ -81,11 +86,6 @@
         "command": "eureka.plus.runTest",
         "title": "Run Test",
         "icon": "$(play)"
-      },
-      {
-        "command": "eureka.plus.runAllTestsInFolder",
-        "title": "Run All Tests in Folder",
-        "icon": "$(play-circle)"
       }
     ],
     "menus": {
