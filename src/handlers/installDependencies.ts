@@ -1,14 +1,11 @@
-import * as vscode from 'vscode';
 import { exec } from 'child_process';
 import * as os from 'os';
-import { getExtensionPath } from './common';
+import * as vscode from 'vscode';
+import { getPlaywrightPath } from './common';
 
 export default function (context: vscode.ExtensionContext) {
-    const playwrightPath = getExtensionPath(context);
-    if (!playwrightPath) {
-        vscode.window.showErrorMessage('Error: Could not find Playwright');
-        return false;
-    } else {
+    const playwrightPath = getPlaywrightPath(context);
+    if (playwrightPath) {
         // Show a progress notification for installation
         vscode.window.withProgress(
             {

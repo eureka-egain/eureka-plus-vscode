@@ -1,19 +1,16 @@
-import * as vscode from 'vscode';
+import { spawn } from 'child_process';
 import * as fs from "fs";
 import path from "path";
-import { exec, spawn } from 'child_process';
-import { getExtensionPath, getExtensionSettings, getWorkspaceRoot } from './common';
+import * as vscode from 'vscode';
+import { getExtensionSettings, getPlaywrightPath, getWorkspaceRoot, runProcess } from './common';
 
 
 export default function ({ context, recordFsPath }: {
     context: vscode.ExtensionContext;
     recordFsPath: string | undefined;
 }) {
-    const playwrightPath = getExtensionPath(context);
-    if (!playwrightPath) {
-        vscode.window.showErrorMessage('Error: Could not find Playwright');
-        return false;
-    } else {
+    const playwrightPath = getPlaywrightPath(context);
+    if (playwrightPath) {
         // Prompt for the recording name
         vscode.window.showInputBox({
             prompt: 'Enter the name for the new test recording FUCK',
@@ -49,7 +46,6 @@ export default function ({ context, recordFsPath }: {
                 vscode.window.withProgress(
                     {
                         location: vscode.ProgressLocation.Notification,
-                        title: 'Eureka+',
                         cancellable: true,
                     },
                     async (progress) => {
@@ -73,42 +69,27 @@ export default function ({ context, recordFsPath }: {
                             fs.mkdirSync(recordingFolder, { recursive: true }); // Create the folder recursively
                         }
 
-                        await new Promise<void>((resolve, reject) => {
-                            const recordingProcess = spawn(playwrightPath, [
+                        await runProcess({
+                            command: playwrightPath,
+                            args: [
                                 'codegen',
                                 `--output=${recordingSpecFilePath}`,
                                 `--save-storage=${recordingStorageFilePath}`,
                                 `--save-har=${recordingHARFilePath}`,
                                 '--ignore-https-errors',
                                 initialUrl,
-                            ], { shell: true });
-
-                            // Log stdout and stderr for debugging
-                            recordingProcess.stdout.on('data', (data) => {
-                                console.log(`stdout: ${data}`);
-                            });
-
-                            recordingProcess.stderr.on('data', (data) => {
-                                console.error(`stderr: ${data}`);
-                            });
-
-                            // Handle process exit
-                            recordingProcess.on('close', (code) => {
+                            ],
+                            onExit(code) {
                                 if (code === 0) {
                                     vscode.window.showInformationMessage(`Test recording completed: ${recordingPath}`);
                                     vscode.workspace.openTextDocument(recordingSpecFilePath).then(vscode.window.showTextDocument);
-                                    resolve();
                                 } else {
                                     vscode.window.showErrorMessage(`Test recording process exited with code ${code}`);
-                                    reject(new Error(`Process exited with code ${code}`));
                                 }
-                            });
-
-                            // Handle errors
-                            recordingProcess.on('error', (error) => {
+                            },
+                            onError(error) {
                                 vscode.window.showErrorMessage(`Error starting the test recording: ${error.message}`);
-                                reject(error);
-                            });
+                            },
                         });
                     }
                 );
