@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import * as vscode from 'vscode';
 import { getExtensionRoot, moveTestResultsFolderToWorkspace, runProcess } from "./common";
 
@@ -23,22 +23,25 @@ export default async function ({ context, testFileName, testFolderPath }: {
         args: [
             '--ui',
         ],
-        onExit: () => {
+        onExit: ({ resolve }) => {
             if (fs.existsSync(testTempFolderDestination)) {
                 fs.removeSync(testTempFolderDestination);
             }
+            resolve();
         },
-        onError: (error) => {
+        onError: ({ error, resolve }) => {
             vscode.window.showErrorMessage(`Error: ${error}`);
             if (fs.existsSync(testTempFolderDestination)) {
                 fs.removeSync(testTempFolderDestination);
             }
+            resolve();
         },
-        onStderr: (data) => {
+        onStderr: ({ data, resolve }) => {
             vscode.window.showErrorMessage(`Error: ${data}`);
             if (fs.existsSync(testTempFolderDestination)) {
                 fs.removeSync(testTempFolderDestination);
             }
+            resolve();
         },
         cwd: testTempFolderDestination,
     });

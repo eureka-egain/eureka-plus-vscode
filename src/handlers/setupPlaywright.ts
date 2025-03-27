@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import { getExtensionRoot, runProcess } from './common';
 import path from 'path';
 
@@ -24,10 +24,10 @@ export default function (context: vscode.ExtensionContext) {
                 await runProcess({
                     command: installCommand,
                     cwd: extensionRoot,
-                    onError(error) {
+                    onError({ error }) {
                         vscode.window.showErrorMessage(`Error setting up Playwright: ${error.message}`);
                     },
-                    onExit(code) {
+                    onExit({ code }) {
                         if (code === 0) {
                             vscode.window.showInformationMessage(`Playwright setup successfully`);
                         } else {

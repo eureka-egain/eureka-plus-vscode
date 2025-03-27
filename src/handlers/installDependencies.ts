@@ -19,15 +19,14 @@ export default function (context: vscode.ExtensionContext) {
             await runProcess({
                 command: browserInstallCommand,
                 cwd: extensionRoot,
-                onStderr: (data) => {
-                    console.log(data);
+                onStderr: ({ data }) => {
                     vscode.window.showErrorMessage(`Stderr: ${data}`);
                 },
-                onError(error) {
+                onError({ error }) {
                     console.log(error);
                     vscode.window.showErrorMessage(`Error installing browsers: ${error.message}`);
                 },
-                onExit(code) {
+                onExit({ code }) {
                     if (code === 0) {
                         vscode.window.showInformationMessage(`Browser binaries installed successfully`);
                     } else {
@@ -43,13 +42,13 @@ export default function (context: vscode.ExtensionContext) {
                 const depsInstallCommand = `npx playwright install-deps`;
                 await runProcess({
                     command: depsInstallCommand,
-                    onStderr: (data) => {
+                    onStderr: ({ data }) => {
                         vscode.window.showErrorMessage(`Stderr: ${data}`);
                     },
-                    onError(error) {
+                    onError({ error }) {
                         vscode.window.showErrorMessage(`Error installing dependencies: ${error.message}`);
                     },
-                    onExit(code) {
+                    onExit({ code }) {
                         if (code === 0) {
                             vscode.window.showInformationMessage(`Linux dependencies installed successfully`);
                         } else {

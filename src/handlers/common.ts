@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import path from "path";
 import { spawn } from 'child_process';
 import { defaultTestsFolderName } from '../utils/constants';
@@ -42,38 +42,63 @@ export const runProcess = ({ command, args, cwd, onError, onExit, onStderr, onSt
      */
     args?: string[];
     cwd?: string;
-    onStdout?: (data: string) => void;
-    onStderr?: (data: string) => void;
-    onExit?: (code: number | null) => void;
-    onError?: (error: Error) => void;
+    onStdout?: (props: {
+        data: string; resolve: (value: void | PromiseLike<void>) => void; reject: (reason?: any) => void
+    }) => void;
+    onStderr?: (props: {
+        data: string; resolve: (value: void | PromiseLike<void>) => void; reject: (reason?: any) => void
+    }) => void;
+    onExit?: (props: {
+        code: number | null; resolve: (value: void | PromiseLike<void>) => void; reject: (reason?: any) => void
+    }) => void;
+    onError?: (props: {
+        error: Error; resolve: (value: void | PromiseLike<void>) => void; reject: (reason?: any) => void
+    }) => void;
 }) => {
     return new Promise<void>((resolve, reject) => {
         const process = spawn(command, args ?? [], { shell: true, cwd });
 
         // Log stdout and stderr for debugging
         process.stdout.on('data', (data) => {
-            onStdout?.(data.toString());
+            onStdout?.({
+                data: data.toString(),
+                resolve,
+                reject
+            });
         });
 
         process.stderr.on('data', (data) => {
-            onStderr?.(data.toString());
+            onStderr?.({
+                data: data.toString(),
+                resolve,
+                reject
+            });
         });
 
         // Handle process exit
         process.on('close', (code) => {
             if (code === 0) {
-                onExit?.(code);
-                resolve();
+                onExit?.({
+                    code,
+                    resolve,
+                    reject
+                });
             } else {
-                onExit?.(code);
-                resolve();
+                onExit?.({
+                    code,
+                    resolve,
+                    reject
+                });
             }
         });
 
         // Handle errors
         process.on('error', (error) => {
-            onError?.(error);
-            resolve();
+            onError?.({
+                error,
+                resolve,
+                reject
+            });
         });
     });
 };

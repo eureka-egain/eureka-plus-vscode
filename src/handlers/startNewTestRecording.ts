@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
-import { getExtensionRoot, getWorkspaceRoot, sanitizeTestName } from './common';
+import fs from 'fs-extra';
+import { getExtensionRoot, getExtensionSettings, getWorkspaceRoot, runProcess, sanitizeTestName } from './common';
+import path from 'path';
 
 
 export default function ({ context, recordFsPath }: {
@@ -26,7 +28,7 @@ export default function ({ context, recordFsPath }: {
             prompt: 'Enter the initial URL to load for the test recording',
             title: `Initial URL for test`,
             placeHolder: 'e.g., http://localhost:3000/work/login',
-            value: "https://microsoft.github.io/vscode-codicons/dist/codicon.html",
+            value: "https://microsoft.github.io/vscode-codicons/dist/codicon.html", // TODO: Remove this pre-release
             ignoreFocusOut: true,
             validateInput: (input) => {
                 try {
@@ -59,6 +61,55 @@ export default function ({ context, recordFsPath }: {
                         return;
                     }
 
+                    const tempRecordingFolder = path.join(extensionRoot, recordingName);
+                    const tempPaths = {
+                        specFile: path.join(tempRecordingFolder, `${recordingName}.spec.ts`),
+                        harFile: path.join(tempRecordingFolder, `${recordingName}.har`),
+                        storageFile: path.join(tempRecordingFolder, `${recordingName}.json`),
+                    };
+
+                    // Create the temp recording folder
+                    fs.mkdirSync(tempRecordingFolder);
+
+                    // Run codegen to start the recording
+                    // console.log(`npx playwright codegen --output=${tempPaths.specFile} --save-storage=${tempPaths.storageFile} --save-har=${tempPaths.harFile} --ignore-https-errors ${initialUrl}`);
+                    return runProcess({
+                        command: 'npx playwright codegen',
+                        args: [
+                            `--output=${tempPaths.specFile}`,
+                            `--save-storage=${tempPaths.storageFile}`,
+                            `--save-har=${tempPaths.harFile}`,
+                            '--ignore-https-errors',
+                            initialUrl,
+                        ],
+                        cwd: extensionRoot,
+                        onExit({ code, resolve }) {
+                            if (code === 0) {
+                                vscode.window.showInformationMessage(`Test recording completed!`);
+                                // move test folder to workspace
+                                const testLocationInWorkspace = recordFsPath ? path.join(recordFsPath, recordingName) : path.join(workspaceRoot, getExtensionSettings().testsFolderName, recordingName);
+                                if (!fs.existsSync(testLocationInWorkspace)) {
+                                    fs.mkdir(testLocationInWorkspace);
+                                }
+                                fs.moveSync(tempRecordingFolder, testLocationInWorkspace, { overwrite: true });
+
+                                vscode.workspace.openTextDocument(path.join(testLocationInWorkspace, `${recordingName}.spec.ts`)).then(vscode.window.showTextDocument);
+                            } else {
+                                vscode.window.showErrorMessage(`Test recording process exited with code ${code}`);
+                                if (fs.existsSync(tempRecordingFolder)) {
+                                    fs.removeSync(tempRecordingFolder);
+                                }
+                            }
+                            resolve();
+                        },
+                        onError({ error, resolve }) {
+                            vscode.window.showErrorMessage(`Error starting the test recording: ${error.message}`);
+                            if (fs.existsSync(tempRecordingFolder)) {
+                                fs.removeSync(tempRecordingFolder);
+                            }
+                            resolve();
+                        },
+                    });
                 }
             );
         });
