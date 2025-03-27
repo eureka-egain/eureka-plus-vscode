@@ -1,13 +1,13 @@
 import * as fs from 'fs-extra';
 import * as vscode from 'vscode';
-import { getExtensionPath, moveTestResultsFolderToWorkspace, runProcess } from "./common";
+import { getExtensionRoot, moveTestResultsFolderToWorkspace, runProcess } from "./common";
 
 export default async function ({ context, testFileName, testFolderPath }: {
     context: vscode.ExtensionContext;
     testFolderPath: string;
     testFileName: string;
 }) {
-    const extensionPath = getExtensionPath(context);
+    const extensionPath = getExtensionRoot(context);
 
     // moving test folder to extension path
     const testTempFolderDestination = `${extensionPath}/tests`;

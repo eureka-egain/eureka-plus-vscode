@@ -9,6 +9,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// ---------------------------------------------------------------
 
+	handlers.setupPlaywright(context);
+
+	// ---------------------------------------------------------------
+
 	const treeDataProvider = new TreeViewProvider(workspaceRoot);
 	vscode.window.registerTreeDataProvider("eplusTestsView", treeDataProvider);
 

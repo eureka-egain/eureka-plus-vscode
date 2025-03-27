@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { getExtensionPath, getWorkspaceRoot, sanitizeTestName } from './common';
+import { getExtensionRoot, getWorkspaceRoot, sanitizeTestName } from './common';
 
 
 export default function ({ context, recordFsPath }: {
@@ -53,7 +53,7 @@ export default function ({ context, recordFsPath }: {
 
                     // Use the recording name and initial URL to save the recording
                     const workspaceRoot = getWorkspaceRoot();
-                    const extensionRoot = getExtensionPath(context);
+                    const extensionRoot = getExtensionRoot(context);
                     if (!workspaceRoot) {
                         vscode.window.showErrorMessage('No workspace folder found.');
                         return;

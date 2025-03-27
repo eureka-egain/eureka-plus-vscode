@@ -3,6 +3,7 @@
   "displayName": "eGain Eureka+",
   "description": "UI Testing for the everyday man",
   "version": "0.0.1",
+  "repository": "https://github.com/eureka-egain/eureka-plus-vscode",
   "engines": {
     "vscode": "^1.98.0"
   },
@@ -42,7 +43,7 @@
       },
       {
         "command": "egain-eureka-plus.installDependencies",
-        "title": "Install Playwright Dependencies"
+        "title": "Install Browsers"
       },
       {
         "command": "egain-eureka-plus.refreshTreeView",

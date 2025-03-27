@@ -2,9 +2,9 @@ import * as vscode from 'vscode';
 import * as fs from 'fs-extra';
 import path from "path";
 import { spawn } from 'child_process';
-import { defaultTestsFolderName } from '../constants';
+import { defaultTestsFolderName } from '../utils/constants';
 
-export const getExtensionPath = (context: vscode.ExtensionContext) => {
+export const getExtensionRoot = (context: vscode.ExtensionContext) => {
     return context.extensionPath;
 };
 
@@ -82,7 +82,7 @@ export const runProcess = ({ command, args, cwd, onError, onExit, onStderr, onSt
 
 export const moveTestResultsFolderToWorkspace = (context: vscode.ExtensionContext) => {
     const workspaceRoot = getWorkspaceRoot();
-    const extensionRoot = getExtensionPath(context);
+    const extensionRoot = getExtensionRoot(context);
 
     if (workspaceRoot) {
         const testResultsFolder = path.join(extensionRoot, 'test-results');
