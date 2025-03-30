@@ -64,8 +64,9 @@ export function activate(context: vscode.ExtensionContext) {
   // RUN ALL TEST CASES
   context.subscriptions.push(
     vscode.commands.registerCommand("egain-eureka-plus.runAllTests", () => {
-      // TODO: Implement this
-      common.showInDevelopementNotification();
+      handlers.runAllTests({
+        context,
+      });
     })
   );
 

@@ -1,9 +1,7 @@
-import fs from "fs-extra";
+import path from "path";
 import * as vscode from "vscode";
 import { common } from "../utils/common";
 import { movers } from "../utils/movers";
-import { cleaners } from "../utils/cleaners";
-import path from "path";
 
 export default async function ({
   context,
@@ -18,7 +16,6 @@ export default async function ({
     context,
     testFolderPath
   );
-  console.log(copyTestFolderResult);
 
   if (copyTestFolderResult) {
     const command = `npx playwright test ${common.formatPathForPW(
