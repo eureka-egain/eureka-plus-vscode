@@ -29,17 +29,36 @@ const moveTestResultsFolderToWorkspace = (context: vscode.ExtensionContext) => {
 
 // ---------------------------------------------------------------
 
-const copyFolderFromWorkspaceToExtension = (
+/**
+ * Copy the test folder from the workspace to the extension folder.
+ * This is used to run the test in the extension folder.
+ * @param context
+ * @param sourceFolderPath
+ * @returns
+ * - destinationFolder: the path to the copied folder in the extension folder
+ * - cleanup: a function to remove the copied folder from the extension folder
+ */
+const copyTestFolderFromWorkspaceToExtension = (
   context: vscode.ExtensionContext,
   sourceFolderPath: string
 ) => {
   const extensionRoot = common.getExtensionRoot(context);
+  console.log({ sourceFolderPath, exist: fs.existsSync(sourceFolderPath) });
 
   if (sourceFolderPath && fs.existsSync(sourceFolderPath)) {
     const destinationFolderName = sourceFolderPath.split(path.sep).pop() || "";
     const destinationFolder = path.join(extensionRoot, destinationFolderName);
 
     fs.copySync(sourceFolderPath, destinationFolder, { overwrite: true });
+
+    return {
+      destinationFolder,
+      cleanup: () => {
+        if (fs.existsSync(destinationFolder)) {
+          fs.removeSync(destinationFolder);
+        }
+      },
+    };
   }
 };
 
@@ -47,5 +66,5 @@ const copyFolderFromWorkspaceToExtension = (
 
 export const movers = {
   moveTestResultsFolderToWorkspace,
-  copyFolderFromWorkspaceToExtension,
+  copyTestFolderFromWorkspaceToExtension,
 };

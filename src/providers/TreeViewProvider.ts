@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import { common } from "../handlers/common";
+import { common } from "../utils/common";
 
 class TreeItem extends vscode.TreeItem {
   constructor(

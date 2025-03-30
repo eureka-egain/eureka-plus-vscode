@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import { TreeViewProvider } from "./providers/TreeViewProvider";
 import { handlers } from "./handlers";
-import { common } from "./handlers/common";
+import { common } from "./utils/common";
+import path from "path";
 
 export function activate(context: vscode.ExtensionContext) {
   // Register the Tree View
@@ -75,7 +76,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "egain-eureka-plus.selectFolder",
       (resourceUri: vscode.Uri) => {
-        console.log("Selected folder", resourceUri.fsPath);
         treeDataProvider.selectedFolderPath = resourceUri.fsPath;
       }
     )
@@ -130,16 +130,22 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "egain-eureka-plus.runTest",
-      (resourceUri: any) => {
-        console.log("Running test", resourceUri);
-        const path = resourceUri["resourceUri"]["path"] as string;
-        const testFolderPath = path.substring(0, path.lastIndexOf("/"));
-        const testFileName = path.substring(path.lastIndexOf("/") + 1);
-        handlers.runTest({
-          context,
-          testFolderPath,
-          testFileName,
-        });
+      (treeItem: vscode.TreeItem) => {
+        const testPath = treeItem.resourceUri?.fsPath;
+        if (testPath) {
+          const testFolderPath = testPath.substring(
+            0,
+            testPath.lastIndexOf(path.sep)
+          );
+          const testFileName = testPath.substring(
+            testPath.lastIndexOf(path.sep) + 1
+          );
+          handlers.runTest({
+            context,
+            testFolderPath,
+            testFileName,
+          });
+        }
       }
     )
   );

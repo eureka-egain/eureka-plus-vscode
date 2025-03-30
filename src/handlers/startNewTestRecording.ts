@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import fs from "fs-extra";
-import { common } from "./common";
+import { common } from "../utils/common";
 import path from "path";
 
 export default function ({

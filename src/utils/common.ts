@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
-import fs from "fs-extra";
-import path from "path";
+import os from "os";
 import { spawn } from "child_process";
-import { defaultTestsFolderName } from "../utils/constants";
+import { defaultTestsFolderName } from "./constants";
 
 const getExtensionRoot = (context: vscode.ExtensionContext) => {
   return context.extensionPath;
@@ -134,6 +133,13 @@ const showInDevelopementNotification = () => {
 
 // ---------------------------------------------------------------
 
+const processPathBasedOnOS = (path: string) => {
+  const isWindows = os.platform() === "win32";
+  return isWindows ? path.slice(1) : path;
+};
+
+// ---------------------------------------------------------------
+
 export const common = {
   getExtensionRoot,
   getExtensionSettings,
@@ -141,4 +147,5 @@ export const common = {
   runProcess,
   sanitizeTestName,
   showInDevelopementNotification,
+  processPathBasedOnOS,
 };

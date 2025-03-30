@@ -1,6 +1,6 @@
 import * as os from "os";
 import * as vscode from "vscode";
-import { common } from "./common";
+import { common } from "../utils/common";
 
 export default function (context: vscode.ExtensionContext) {
   vscode.window.withProgress(
