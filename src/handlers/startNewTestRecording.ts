@@ -72,7 +72,6 @@ export default function ({ context, recordFsPath }: {
                     fs.mkdirSync(tempRecordingFolder);
 
                     // Run codegen to start the recording
-                    // console.log(`npx playwright codegen --output=${tempPaths.specFile} --save-storage=${tempPaths.storageFile} --save-har=${tempPaths.harFile} --ignore-https-errors ${initialUrl}`);
                     return runProcess({
                         command: 'npx playwright codegen',
                         args: [

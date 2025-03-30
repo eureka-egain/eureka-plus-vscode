@@ -75,6 +75,7 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand(
 			"egain-eureka-plus.selectFolder",
 			(resourceUri: vscode.Uri) => {
+				console.log("Selected folder", resourceUri.fsPath);
 				treeDataProvider.selectedFolderPath = resourceUri.fsPath;
 			}
 		)
@@ -84,9 +85,14 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
 			"egain-eureka-plus.runAllTestsInFolder",
-			() => {
-				// TODO: Implement this
-				showInDevelopementNotification();
+			(treeItem: vscode.TreeItem) => {
+				console.log({ treeItem });
+				// if (treeItem.resourceUri?.fsPath) {
+				// 	handlers.runTestInFolder({
+				// 		context,
+				// 		folderPath: treeItem.resourceUri.fsPath
+				// 	});
+				// }
 			}
 		)
 	);
