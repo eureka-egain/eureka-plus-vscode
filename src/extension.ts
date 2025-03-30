@@ -86,13 +86,13 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "egain-eureka-plus.runAllTestsInFolder",
       (treeItem: vscode.TreeItem) => {
-        console.log({ treeItem });
-        // if (treeItem.resourceUri?.fsPath) {
-        // 	handlers.runTestInFolder({
-        // 		context,
-        // 		folderPath: treeItem.resourceUri.fsPath
-        // 	});
-        // }
+        const pathToFolder = treeItem.resourceUri?.fsPath;
+        if (pathToFolder) {
+          handlers.runTestInFolder({
+            context,
+            folderPath: pathToFolder,
+          });
+        }
       }
     )
   );
@@ -137,9 +137,7 @@ export function activate(context: vscode.ExtensionContext) {
             0,
             testPath.lastIndexOf(path.sep)
           );
-          const testFileName = testPath.substring(
-            testPath.lastIndexOf(path.sep) + 1
-          );
+          const testFileName = path.basename(testPath);
           handlers.runTest({
             context,
             testFolderPath,

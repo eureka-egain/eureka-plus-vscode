@@ -133,9 +133,8 @@ const showInDevelopementNotification = () => {
 
 // ---------------------------------------------------------------
 
-const processPathBasedOnOS = (path: string) => {
-  const isWindows = os.platform() === "win32";
-  return isWindows ? path.slice(1) : path;
+const formatPathForPW = (path: string) => {
+  return path.replace(/\\/g, "/");
 };
 
 // ---------------------------------------------------------------
@@ -147,5 +146,5 @@ export const common = {
   runProcess,
   sanitizeTestName,
   showInDevelopementNotification,
-  processPathBasedOnOS,
+  formatPathForPW,
 };

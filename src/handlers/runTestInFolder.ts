@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { common } from "../utils/common";
 import { movers } from "../utils/movers";
+import path from "path";
 
 export default async function ({
   context,
@@ -15,7 +16,10 @@ export default async function ({
   );
 
   if (copyTestFolderResult) {
-    const command = `npx playwright test ${folderPath} --ui`;
+    const command = `npx playwright test ${common.formatPathForPW(
+      copyTestFolderResult.destinationFolder
+    )} --ui`;
+    console.log({ command2: command });
 
     await common.runProcess({
       command: command,
