@@ -1,155 +1,149 @@
 import * as vscode from "vscode";
 import { TreeViewProvider } from "./providers/TreeViewProvider";
 import { handlers } from "./handlers";
-import { showInDevelopementNotification } from "./handlers/common";
+import { common } from "./handlers/common";
 
 export function activate(context: vscode.ExtensionContext) {
-	// Register the Tree View
-	const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+  // Register the Tree View
+  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 
-	// ---------------------------------------------------------------
+  // ---------------------------------------------------------------
 
-	handlers.setupPlaywright(context);
+  handlers.setupPlaywright(context);
 
-	// ---------------------------------------------------------------
+  // ---------------------------------------------------------------
 
-	const treeDataProvider = new TreeViewProvider(workspaceRoot);
-	vscode.window.registerTreeDataProvider("eplusTestsView", treeDataProvider);
+  const treeDataProvider = new TreeViewProvider(workspaceRoot);
+  vscode.window.registerTreeDataProvider("eplusTestsView", treeDataProvider);
 
-	// ---------------------------------------------------------------
+  // ---------------------------------------------------------------
 
-	// OPEN SETTINGS
-	context.subscriptions.push(
-		vscode.commands.registerCommand("egain-eureka-plus.extensionSettings", () => {
-			vscode.commands.executeCommand(
-				"workbench.action.openSettings",
-				"eureka+"
-			);
-		})
-	);
+  // OPEN SETTINGS
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "egain-eureka-plus.extensionSettings",
+      () => {
+        vscode.commands.executeCommand(
+          "workbench.action.openSettings",
+          "eureka+"
+        );
+      }
+    )
+  );
 
-	// INSTALL DEPENDENCIES
-	context.subscriptions.push(
-		vscode.commands.registerCommand("egain-eureka-plus.installDependencies", () => {
-			handlers.installDependencies(context);
-		})
-	);
+  // INSTALL DEPENDENCIES
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "egain-eureka-plus.installDependencies",
+      () => {
+        handlers.installDependencies(context);
+      }
+    )
+  );
 
-	// REFRESH TREE VIEW
-	context.subscriptions.push(
-		vscode.commands.registerCommand("egain-eureka-plus.refreshTreeView", () => {
-			treeDataProvider.refresh();
-		})
-	);
+  // REFRESH TREE VIEW
+  context.subscriptions.push(
+    vscode.commands.registerCommand("egain-eureka-plus.refreshTreeView", () => {
+      treeDataProvider.refresh();
+    })
+  );
 
-	// ---------------------------------------------------------------
+  // ---------------------------------------------------------------
 
-	// START NEW RECORDING
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			"egain-eureka-plus.recordNewTest",
-			() => {
-				handlers.startNewTestRecording({
-					context,
-					recordFsPath: treeDataProvider.selectedFolderPath,
-				});
-			}
-		)
-	);
+  // START NEW RECORDING
+  context.subscriptions.push(
+    vscode.commands.registerCommand("egain-eureka-plus.recordNewTest", () => {
+      handlers.startNewTestRecording({
+        context,
+        recordFsPath: treeDataProvider.selectedFolderPath,
+      });
+    })
+  );
 
-	// RUN ALL TEST CASES
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			"egain-eureka-plus.runAllTests",
-			() => {
-				// TODO: Implement this
-				showInDevelopementNotification();
-			}
-		)
-	);
+  // RUN ALL TEST CASES
+  context.subscriptions.push(
+    vscode.commands.registerCommand("egain-eureka-plus.runAllTests", () => {
+      // TODO: Implement this
+      common.showInDevelopementNotification();
+    })
+  );
 
-	// ---------------------------------------------------------------
+  // ---------------------------------------------------------------
 
-	// FOLDER SELECT
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			"egain-eureka-plus.selectFolder",
-			(resourceUri: vscode.Uri) => {
-				console.log("Selected folder", resourceUri.fsPath);
-				treeDataProvider.selectedFolderPath = resourceUri.fsPath;
-			}
-		)
-	);
+  // FOLDER SELECT
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "egain-eureka-plus.selectFolder",
+      (resourceUri: vscode.Uri) => {
+        console.log("Selected folder", resourceUri.fsPath);
+        treeDataProvider.selectedFolderPath = resourceUri.fsPath;
+      }
+    )
+  );
 
-	// RUN ALL TESTS IN FOLDER
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			"egain-eureka-plus.runAllTestsInFolder",
-			(treeItem: vscode.TreeItem) => {
-				console.log({ treeItem });
-				// if (treeItem.resourceUri?.fsPath) {
-				// 	handlers.runTestInFolder({
-				// 		context,
-				// 		folderPath: treeItem.resourceUri.fsPath
-				// 	});
-				// }
-			}
-		)
-	);
+  // RUN ALL TESTS IN FOLDER
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "egain-eureka-plus.runAllTestsInFolder",
+      (treeItem: vscode.TreeItem) => {
+        console.log({ treeItem });
+        // if (treeItem.resourceUri?.fsPath) {
+        // 	handlers.runTestInFolder({
+        // 		context,
+        // 		folderPath: treeItem.resourceUri.fsPath
+        // 	});
+        // }
+      }
+    )
+  );
 
-	// ---------------------------------------------------------------
+  // ---------------------------------------------------------------
 
-	// OPEN FILE
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			"egain-eureka-plus.openFile",
-			(resourceUri: vscode.Uri) => {
-				treeDataProvider.selectedFolderPath = undefined;
-				vscode.window.showTextDocument(resourceUri);
-			}
-		)
-	);
+  // OPEN FILE
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "egain-eureka-plus.openFile",
+      (resourceUri: vscode.Uri) => {
+        treeDataProvider.selectedFolderPath = undefined;
+        vscode.window.showTextDocument(resourceUri);
+      }
+    )
+  );
 
-	// RE-RECORD TEST
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			"egain-eureka-plus.reRecordTest",
-			() => {
-				// TODO: Implement this
-				showInDevelopementNotification();
-			}
-		)
-	);
+  // RE-RECORD TEST
+  context.subscriptions.push(
+    vscode.commands.registerCommand("egain-eureka-plus.reRecordTest", () => {
+      // TODO: Implement this
+      common.showInDevelopementNotification();
+    })
+  );
 
-	// VIEW TEST SUMMARY
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			"egain-eureka-plus.viewTestSummary",
-			() => {
-				// TODO: Implement this
-				showInDevelopementNotification();
-			}
-		)
-	);
+  // VIEW TEST SUMMARY
+  context.subscriptions.push(
+    vscode.commands.registerCommand("egain-eureka-plus.viewTestSummary", () => {
+      // TODO: Implement this
+      common.showInDevelopementNotification();
+    })
+  );
 
-	// RUN TEST
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			"egain-eureka-plus.runTest",
-			(resourceUri: any) => {
-				console.log("Running test", resourceUri);
-				const path = resourceUri["resourceUri"]["path"] as string;
-				const testFolderPath = path.substring(0, path.lastIndexOf("/"));
-				const testFileName = path.substring(path.lastIndexOf("/") + 1);
-				handlers.runTest({
-					context,
-					testFolderPath,
-					testFileName
-				});
-			}
-		)
-	);
+  // RUN TEST
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "egain-eureka-plus.runTest",
+      (resourceUri: any) => {
+        console.log("Running test", resourceUri);
+        const path = resourceUri["resourceUri"]["path"] as string;
+        const testFolderPath = path.substring(0, path.lastIndexOf("/"));
+        const testFileName = path.substring(path.lastIndexOf("/") + 1);
+        handlers.runTest({
+          context,
+          testFolderPath,
+          testFileName,
+        });
+      }
+    )
+  );
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {}

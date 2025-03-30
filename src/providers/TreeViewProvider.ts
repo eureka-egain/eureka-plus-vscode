@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import { getExtensionSettings } from "../handlers/common";
+import { common } from "../handlers/common";
 
 class TreeItem extends vscode.TreeItem {
   constructor(
@@ -40,13 +40,13 @@ export class TreeViewProvider implements vscode.TreeDataProvider<TreeItem> {
 
   constructor(private workspaceRoot: string | undefined) {
     if (workspaceRoot) {
-      const testsFolderName = getExtensionSettings().testsFolderName;
+      const testsFolderName = common.getExtensionSettings().testsFolderName;
       if (fs.existsSync(path.join(workspaceRoot, testsFolderName))) {
         // Create a file system watcher for the workspace folder
         this.fileWatcher = vscode.workspace.createFileSystemWatcher(
           new vscode.RelativePattern(
             workspaceRoot,
-            `${getExtensionSettings().testsFolderName}/*`
+            `${common.getExtensionSettings().testsFolderName}/*`
           )
         );
 
