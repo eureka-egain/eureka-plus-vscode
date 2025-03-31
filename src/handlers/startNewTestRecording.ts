@@ -17,9 +17,12 @@ export default function ({
   reRecord?: boolean;
 }) {
   let testNameFromConfig = "";
-  // TODO: Remove this pre-release
-  let initialUrlFromConfig =
-    "https://microsoft.github.io/vscode-codicons/dist/codicon.html";
+  /**
+   * URLS:
+   * https://microsoft.github.io/vscode-codicons/dist/codicon.html
+   * https://www.w3schools.com/js/tryit.asp?filename=tryjs_date_new
+   */
+  let initialUrlFromConfig = "";
   if (recordToPath) {
     const configFilePath = path.join(recordToPath, eurekaPlusConfigFileName);
     if (fs.existsSync(configFilePath)) {
@@ -117,6 +120,7 @@ export default function ({
                   `--output=${tempPaths.specFile}`,
                   `--save-storage=${tempPaths.storageFile}`,
                   `--save-har=${tempPaths.harFile}`,
+                  `--save-har-glob="**/api/**"`,
                   "--ignore-https-errors",
                   initialUrl,
                 ],
