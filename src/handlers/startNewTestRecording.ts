@@ -2,19 +2,39 @@ import * as vscode from "vscode";
 import fs from "fs-extra";
 import { common } from "../utils/common";
 import path from "path";
+import {
+  eurekaPlusConfigFileName,
+  eurekaPlusConfigFileVersion,
+} from "../utils/constants";
+import { EurekaPlusConfigFile } from "../utils/types";
 
 export default function ({
   context,
-  recordFsPath,
+  recordToPath,
 }: {
   context: vscode.ExtensionContext;
-  recordFsPath: string | undefined;
+  recordToPath: string | undefined;
+  reRecord?: boolean;
 }) {
+  let testNameFromConfig = "";
+  // TODO: Remove this pre-release
+  let initialUrlFromConfig =
+    "https://microsoft.github.io/vscode-codicons/dist/codicon.html";
+  if (recordToPath) {
+    const configFilePath = path.join(recordToPath, eurekaPlusConfigFileName);
+    if (fs.existsSync(configFilePath)) {
+      const configData = common.readEurekaPlusConfigFile(configFilePath);
+      testNameFromConfig = configData.testName;
+      initialUrlFromConfig = configData.initialUrl;
+    }
+  }
+
   // Prompt for the recording name
   vscode.window
     .showInputBox({
       prompt: "Enter a name for your new test recording",
       placeHolder: "e.g., create-article-form-invalid-value",
+      value: testNameFromConfig,
       ignoreFocusOut: true,
       title: "Test Name",
     })
@@ -35,8 +55,7 @@ export default function ({
           prompt: "Enter the initial URL to load for the test recording",
           title: `Initial URL for test`,
           placeHolder: "e.g., http://localhost:3000/work/login",
-          value:
-            "https://microsoft.github.io/vscode-codicons/dist/codicon.html", // TODO: Remove this pre-release
+          value: initialUrlFromConfig,
           ignoreFocusOut: true,
           validateInput: (input) => {
             try {
@@ -107,9 +126,25 @@ export default function ({
                     vscode.window.showInformationMessage(
                       `Test recording completed!`
                     );
+
+                    // generate config file
+                    const configData: EurekaPlusConfigFile = {
+                      version: eurekaPlusConfigFileVersion,
+                      testName: recordingName,
+                      initialUrl: initialUrl,
+                    };
+                    const configFilePath = path.join(
+                      tempRecordingFolder,
+                      eurekaPlusConfigFileName
+                    );
+                    fs.writeFileSync(
+                      configFilePath,
+                      JSON.stringify(configData)
+                    );
+
                     // move test folder to workspace
-                    const testLocationInWorkspace = recordFsPath
-                      ? path.join(recordFsPath, recordingName)
+                    const testLocationInWorkspace = recordToPath
+                      ? path.join(recordToPath, recordingName)
                       : path.join(
                           workspaceRoot,
                           common.getExtensionSettings().testsFolderName,

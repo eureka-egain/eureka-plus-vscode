@@ -56,7 +56,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("egain-eureka-plus.recordNewTest", () => {
       handlers.startNewTestRecording({
         context,
-        recordFsPath: treeDataProvider.selectedFolderPath,
+        recordToPath: treeDataProvider.selectedFolderPath,
       });
     })
   );
@@ -113,10 +113,16 @@ export function activate(context: vscode.ExtensionContext) {
 
   // RE-RECORD TEST
   context.subscriptions.push(
-    vscode.commands.registerCommand("egain-eureka-plus.reRecordTest", () => {
-      // TODO: Implement this
-      common.showInDevelopementNotification();
-    })
+    vscode.commands.registerCommand(
+      "egain-eureka-plus.reRecordTest",
+      (treeItem: vscode.TreeItem) => {
+        console.log({ treeItem });
+        // handlers.startNewTestRecording({
+        //   context,
+        //   recordToPath: treeDataProvider.selectedFolderPath,
+        // });
+      }
+    )
   );
 
   // VIEW TEST SUMMARY

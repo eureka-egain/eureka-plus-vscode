@@ -1,7 +1,11 @@
 import * as vscode from "vscode";
-import os from "os";
+import fs from "fs-extra";
 import { spawn } from "child_process";
-import { defaultTestsFolderName } from "./constants";
+import {
+  defaultTestsFolderName,
+  eurekaPlusConfigFileVersion,
+} from "./constants";
+import { EurekaPlusConfigFile } from "./types";
 
 const getExtensionRoot = (context: vscode.ExtensionContext) => {
   return context.extensionPath;
@@ -15,6 +19,25 @@ const getExtensionSettings = () => {
     testsFolderName:
       config.get<string>("testsFolderName") || defaultTestsFolderName,
   };
+};
+
+// ---------------------------------------------------------------
+
+const readEurekaPlusConfigFile = (
+  testFolderPath: string
+): EurekaPlusConfigFile => {
+  try {
+    const data = fs.readFileSync(testFolderPath, "utf8");
+    const config: EurekaPlusConfigFile = JSON.parse(data);
+    return config;
+  } catch (error) {
+    console.error("Error reading config file:", error);
+    return {
+      version: eurekaPlusConfigFileVersion,
+      testName: "",
+      initialUrl: "",
+    };
+  }
 };
 
 // ---------------------------------------------------------------
@@ -147,4 +170,5 @@ export const common = {
   sanitizeTestName,
   showInDevelopementNotification,
   formatPathForPW,
+  readEurekaPlusConfigFile,
 };
