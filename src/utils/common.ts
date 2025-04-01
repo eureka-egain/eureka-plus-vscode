@@ -34,6 +34,18 @@ const getNodePath = (context: vscode.ExtensionContext) => {
 
 // ---------------------------------------------------------------
 
+const nodePathExists = (context: vscode.ExtensionContext) => {
+  const nodePath = getNodePath(context);
+  switch (os.platform()) {
+    case "win32":
+      return fs.existsSync(nodePath);
+    default:
+      return fs.pathExists(nodePath);
+  }
+};
+
+// ---------------------------------------------------------------
+
 const getNPX = (context: vscode.ExtensionContext) => {
   const extensionRoot = getExtensionRoot(context);
   switch (os.platform()) {
@@ -246,4 +258,5 @@ export const common = {
   getNPX,
   getNPM,
   getPlaywrightCLIPath,
+  nodePathExists,
 };

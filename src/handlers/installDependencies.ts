@@ -8,15 +8,14 @@ import { pipeline } from "stream";
 import { promisify } from "util";
 import { createWriteStream } from "fs";
 import * as tar from "tar";
-import unzip from "unzipper";
+import AdmZip from "adm-zip";
 
 const streamPipeline = promisify(pipeline);
 
 const installBrowsers = async (context: vscode.ExtensionContext) => {
-  const pathToNode = common.getNodePath(context);
   const extensionRoot = common.getExtensionRoot(context);
 
-  if (fs.pathExistsSync(pathToNode)) {
+  if (common.nodePathExists(context)) {
     // Path to the browsers folder
     const browsersPath = path.join(extensionRoot, "browsers");
 
@@ -55,6 +54,7 @@ const installBrowsers = async (context: vscode.ExtensionContext) => {
           )} ${common.getPlaywrightCLIPath(context)} install`;
           const terminal = vscode.window.createTerminal({
             name: "Eureka+ Install Browsers",
+            shellPath: os.platform() === "win32" ? "cmd.exe" : undefined,
             env: {
               PLAYWRIGHT_BROWSERS_PATH: path.join(extensionRoot, "browsers"),
             },
@@ -74,10 +74,10 @@ const setupPlaywright = async (context: vscode.ExtensionContext) => {
   const pathToNode = common.getNodePath(context);
   const extensionRoot = common.getExtensionRoot(context);
 
-  if (fs.pathExistsSync(pathToNode)) {
+  if (common.nodePathExists(context)) {
     // check if ".bin" folder exists
     const binFolderPath = path.join(extensionRoot, "node_modules", ".bin");
-    if (!fs.existsSync(binFolderPath)) {
+    if (!fs.pathExists(binFolderPath)) {
       // run npm install in extension root
       vscode.window.withProgress(
         {
@@ -118,15 +118,16 @@ const setupPlaywright = async (context: vscode.ExtensionContext) => {
           });
         }
       );
+    } else {
+      installBrowsers(context);
     }
   }
 };
 
 export default async function (context: vscode.ExtensionContext) {
-  let pathToNode = common.getNodePath(context);
   const extensionRoot = common.getExtensionRoot(context);
 
-  if (!fs.pathExistsSync(pathToNode)) {
+  if (!common.nodePathExists(context)) {
     // Determine the user's OS and architecture
     const platform = os.platform();
     const arch = os.arch();
@@ -164,8 +165,7 @@ export default async function (context: vscode.ExtensionContext) {
         modal: true,
         detail: "Please do not close VSCode during installation and setup",
       },
-      "Install & Setup",
-      "No"
+      "Install & Setup"
     );
 
     if (userPermission === "Install & Setup") {
@@ -236,8 +236,26 @@ export default async function (context: vscode.ExtensionContext) {
                 strip: 1,
               });
             } else if (nodeFileName.endsWith(".zip")) {
-              const directory = await unzip.Open.file(localNodeArchive);
-              await directory.extract({ path: localNodePath });
+              const zip = new AdmZip(localNodeArchive);
+              const entries = zip.getEntries();
+
+              // Extract only the contents of the folder inside the zip
+              entries.forEach((entry) => {
+                const entryNameParts = entry.entryName.split("/");
+
+                // Skip the top-level folder and adjust the path
+                if (entryNameParts.length > 1) {
+                  const relativePath = entryNameParts.slice(1).join("/");
+                  const targetPath = path.join(localNodePath, relativePath);
+
+                  if (entry.isDirectory) {
+                    fs.ensureDirSync(targetPath);
+                  } else {
+                    fs.ensureDirSync(path.dirname(targetPath));
+                    fs.writeFileSync(targetPath, entry.getData());
+                  }
+                }
+              });
             }
 
             vscode.window.showInformationMessage(
@@ -266,5 +284,7 @@ export default async function (context: vscode.ExtensionContext) {
         "Eureka+ will not be functional now. You can invoke this setup again from the Eureka+ Explorer View."
       );
     }
+  } else {
+    setupPlaywright(context);
   }
 }
