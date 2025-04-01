@@ -120,7 +120,7 @@ export default function ({
                   `--output=${tempPaths.specFile}`,
                   `--save-storage=${tempPaths.storageFile}`,
                   `--save-har=${tempPaths.harFile}`,
-                  `--save-har-glob="**/api/**"`,
+                  `--save-har-glob="${common.getExtensionSettings().recordingHARBlob}"`,
                   "--ignore-https-errors",
                   initialUrl,
                 ],

@@ -46,7 +46,7 @@ export class TreeViewProvider implements vscode.TreeDataProvider<TreeItem> {
         this.fileWatcher = vscode.workspace.createFileSystemWatcher(
           new vscode.RelativePattern(
             workspaceRoot,
-            `${common.getExtensionSettings().testsFolderName}/*`
+            "**/*"
           )
         );
 
