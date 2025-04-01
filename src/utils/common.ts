@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as os from "os";
 import fs from "fs-extra";
 import { spawn } from "child_process";
 import {
@@ -14,21 +15,60 @@ const getExtensionRoot = (context: vscode.ExtensionContext) => {
 
 // ---------------------------------------------------------------
 
+const getPlaywrightCLIPath = (context: vscode.ExtensionContext) => {
+  const extensionRoot = getExtensionRoot(context);
+  return path.join(extensionRoot, "node_modules", "playwright", "cli.js");
+};
+
+// ---------------------------------------------------------------
+
 const getNodePath = (context: vscode.ExtensionContext) => {
   const extensionRoot = getExtensionRoot(context);
-  return path.join(extensionRoot, "utils", "node");
+  switch (os.platform()) {
+    case "win32":
+      return path.join(extensionRoot, "utils", "node", "node.exe");
+    default:
+      return path.join(extensionRoot, "utils", "node", "bin", "node");
+  }
 };
 
 // ---------------------------------------------------------------
 
 const getNPX = (context: vscode.ExtensionContext) => {
-  return path.join(getNodePath(context), "npx");
+  const extensionRoot = getExtensionRoot(context);
+  switch (os.platform()) {
+    case "win32":
+      return path.join(extensionRoot, "utils", "node", "node", "npx");
+    default:
+      return path.join(getNodePath(context), "bin", "npx");
+  }
 };
 
 // ---------------------------------------------------------------
 
 const getNPM = (context: vscode.ExtensionContext) => {
-  return path.join(getNodePath(context), "npm");
+  const extensionRoot = getExtensionRoot(context);
+  switch (os.platform()) {
+    case "win32":
+      return path.join(
+        extensionRoot,
+        "utils",
+        "node",
+        "node_modules",
+        "npm",
+        "index.js"
+      );
+    default:
+      return path.join(
+        extensionRoot,
+        "utils",
+        "node",
+        "lib",
+        "node_modules",
+        "npm",
+        "index.js"
+      );
+  }
 };
 
 // ---------------------------------------------------------------
@@ -194,5 +234,6 @@ export const common = {
   readEurekaPlusConfigFile,
   getNodePath,
   getNPX,
-  getNPM
+  getNPM,
+  getPlaywrightCLIPath,
 };

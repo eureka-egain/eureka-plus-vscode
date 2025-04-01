@@ -3,3 +3,6 @@ dist
 node_modules
 .vscode-test/
 *.vsix
+browsers/
+utils/node
+eplus-tests

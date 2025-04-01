@@ -51,7 +51,7 @@
       },
       {
         "command": "egain-eureka-plus.installDependencies",
-        "title": "Install Browsers"
+        "title": "Install dependencies"
       },
       {
         "command": "egain-eureka-plus.refreshTreeView",
@@ -163,7 +163,6 @@
     "@types/fs-extra": "^11.0.4",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
-    "@types/tar-fs": "^2.0.4",
     "@types/unzipper": "^0.10.11",
     "@types/vscode": "^1.98.0",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
@@ -179,7 +178,7 @@
     "@playwright/test": "https://github.com/eureka-egain/eureka-plus/releases/download/1.51.0-1.6.0/pw-test.tgz",
     "fs-extra": "^11.3.0",
     "playwright": "https://github.com/eureka-egain/eureka-plus/releases/download/1.51.0-1.6.0/pw.tgz",
-    "tar-fs": "^3.0.8",
+    "tar": "^7.4.3",
     "unzipper": "^0.12.3"
   }
 }

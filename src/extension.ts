@@ -10,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // ---------------------------------------------------------------
 
-  handlers.setupPlaywright(context);
+  handlers.installDependencies(context);
 
   // ---------------------------------------------------------------
 
