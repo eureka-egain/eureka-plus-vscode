@@ -125,7 +125,7 @@ export default function ({
                   initialUrl,
                 ],
                 cwd: extensionRoot,
-                onExit({ code, resolve }) {
+                onExit: ({ code, resolve }) => {
                   if (code === 0) {
                     vscode.window.showInformationMessage(
                       `Test recording completed!`
@@ -179,7 +179,7 @@ export default function ({
                   }
                   resolve();
                 },
-                onError({ error, resolve }) {
+                onError: ({ error, resolve }) => {
                   vscode.window.showErrorMessage(
                     `Error starting the test recording: ${error.message}`
                   );

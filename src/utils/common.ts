@@ -6,9 +6,29 @@ import {
   eurekaPlusConfigFileVersion,
 } from "./constants";
 import { EurekaPlusConfigFile } from "./types";
+import path from "path";
 
 const getExtensionRoot = (context: vscode.ExtensionContext) => {
   return context.extensionPath;
+};
+
+// ---------------------------------------------------------------
+
+const getNodePath = (context: vscode.ExtensionContext) => {
+  const extensionRoot = getExtensionRoot(context);
+  return path.join(extensionRoot, "utils", "node");
+};
+
+// ---------------------------------------------------------------
+
+const getNPX = (context: vscode.ExtensionContext) => {
+  return path.join(getNodePath(context), "npx");
+};
+
+// ---------------------------------------------------------------
+
+const getNPM = (context: vscode.ExtensionContext) => {
+  return path.join(getNodePath(context), "npm");
 };
 
 // ---------------------------------------------------------------
@@ -172,4 +192,7 @@ export const common = {
   showInDevelopementNotification,
   formatPathForPW,
   readEurekaPlusConfigFile,
+  getNodePath,
+  getNPX,
+  getNPM
 };

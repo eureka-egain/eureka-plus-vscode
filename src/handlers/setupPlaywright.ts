@@ -1,7 +1,7 @@
-import * as vscode from "vscode";
 import fs from "fs-extra";
-import { common } from "../utils/common";
 import path from "path";
+import * as vscode from "vscode";
+import { common } from "../utils/common";
 
 export default function (context: vscode.ExtensionContext) {
   const extensionRoot = common.getExtensionRoot(context);
@@ -19,24 +19,36 @@ export default function (context: vscode.ExtensionContext) {
       async (progress) => {
         progress.report({ message: "Setting up Playwright..." });
 
-        const installCommand = `npm install`;
-        await common.runProcess({
+        // Path to npm (relative to VS Code's Node.js binary)
+        const npmPath = path.join(
+          vscode.env.appRoot,
+          "node_modules",
+          "npm",
+          "bin",
+          "npm-cli.js"
+        );
+
+        const installCommand = `${common.getNPM(context)} install`;
+        return common.runProcess({
           command: installCommand,
           cwd: extensionRoot,
-          onError({ error }) {
+          onError({ error, resolve }) {
             vscode.window.showErrorMessage(
               `Error setting up Playwright: ${error.message}`
             );
+            resolve();
           },
-          onExit({ code }) {
+          onExit({ code, resolve }) {
             if (code === 0) {
               vscode.window.showInformationMessage(
                 `Playwright setup successfully`
               );
+              resolve();
             } else {
               vscode.window.showErrorMessage(
                 `Error setting up Playwright: ${code}`
               );
+              resolve();
             }
           },
         });

@@ -134,7 +134,7 @@
         {
           "command": "egain-eureka-plus.refreshTreeView",
           "when": "view == eplusTestsView",
-          "group": "1_inline@1"
+          "group": "navigation@1"
         },
         {
           "command": "egain-eureka-plus.recordNewTest",
@@ -144,7 +144,7 @@
         {
           "command": "egain-eureka-plus.runAllTests",
           "when": "view == eplusTestsView",
-          "group": "navigation@1"
+          "group": "navigation@3"
         }
       ]
     }

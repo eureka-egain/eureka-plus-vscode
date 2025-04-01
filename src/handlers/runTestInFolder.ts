@@ -19,29 +19,42 @@ export default async function ({
     const command = `npx playwright test ${common.formatPathForPW(
       copyTestFolderResult.destinationFolder
     )} --ui`;
-    console.log({ command2: command });
 
-    await common.runProcess({
-      command: command,
-      args: ["--ui"],
-      onExit: ({ resolve }) => {
-        copyTestFolderResult.cleanup();
-        resolve();
+    vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: "Eureka+",
+        cancellable: true,
       },
-      onError: ({ error, resolve }) => {
-        vscode.window.showErrorMessage(`Error: ${error}`);
-        copyTestFolderResult.cleanup();
-        resolve();
-      },
-      onStderr: ({ data, resolve }) => {
-        vscode.window.showErrorMessage(`Error: ${data}`);
-        copyTestFolderResult.cleanup();
-        resolve();
-      },
-      cwd: common.getExtensionRoot(context),
-    });
+      (progress) => {
+        progress.report({ message: "Running test..." });
 
-    // move generated test results back to workspace
-    movers.moveTestResultsFolderToWorkspace(context);
+        return common.runProcess({
+          command: command,
+          args: ["--ui"],
+          onExit: ({ code, resolve }) => {
+            if (code === 0) {
+              copyTestFolderResult.cleanup();
+              // move generated test results back to workspace
+              movers.moveTestResultsFolderToWorkspace(context);
+            } else {
+              vscode.window.showErrorMessage(`Error: ${code}`);
+            }
+            resolve();
+          },
+          onError: ({ error, resolve }) => {
+            vscode.window.showErrorMessage(`Error: ${error}`);
+            copyTestFolderResult.cleanup();
+            resolve();
+          },
+          onStderr: ({ data, resolve }) => {
+            vscode.window.showErrorMessage(`Error: ${data}`);
+            copyTestFolderResult.cleanup();
+            resolve();
+          },
+          cwd: common.getExtensionRoot(context),
+        });
+      }
+    );
   }
 }
