@@ -18,7 +18,9 @@ export default async function ({
   );
 
   if (copyTestFolderResult) {
-    const command = `npx playwright test ${common.formatPathForPW(
+    const command = `${common.getNodePath(
+      context
+    )} ${common.getPlaywrightCLIPath(context)} test ${common.formatPathForPW(
       path.join(copyTestFolderResult.destinationFolder, testFileName)
     )} --ui`;
 

@@ -115,12 +115,16 @@ export default function ({
 
               // Run codegen to start the recording
               return common.runProcess({
-                command: "npx playwright codegen",
+                command: `${common.getNodePath(
+                  context
+                )} ${common.getPlaywrightCLIPath(context)} codegen`,
                 args: [
                   `--output=${tempPaths.specFile}`,
                   `--save-storage=${tempPaths.storageFile}`,
                   `--save-har=${tempPaths.harFile}`,
-                  `--save-har-glob="${common.getExtensionSettings().recordingHARBlob}"`,
+                  `--save-har-glob="${
+                    common.getExtensionSettings().recordingHARBlob
+                  }"`,
                   "--ignore-https-errors",
                   initialUrl,
                 ],
