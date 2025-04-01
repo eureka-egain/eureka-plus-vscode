@@ -36,7 +36,7 @@ export default function ({
   vscode.window
     .showInputBox({
       prompt: "Enter a name for your new test recording",
-      placeHolder: "e.g., create-article-form-invalid-value",
+      placeHolder: "e.g. Article form invalid value validation",
       value: testNameFromConfig,
       ignoreFocusOut: true,
       title: "Test Name",

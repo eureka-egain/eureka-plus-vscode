@@ -2,10 +2,10 @@
   "name": "egain-eureka-plus",
   "displayName": "eGain Eureka+",
   "description": "UI Testing for the everyday man",
-  "icon": "assets/logo/logo_128.png",
-  "version": "1.0.0",
+  "icon": "assets/logo/logo_transparent_128.png",
+  "version": "0.0.1",
   "license": "MIT",
-  "publisher": "egain-eureka-plus",
+  "publisher": "rraj-egain",
   "repository": "https://github.com/eureka-egain/eureka-plus-vscode",
   "engines": {
     "vscode": "^1.98.0"
@@ -40,15 +40,6 @@
           "icon": "$(flame)",
           "id": "eplusTestsView",
           "name": "Eureka+"
-        }
-      ],
-      "viewsWelcome": [
-        {
-          "id": "eplusTestsView2",
-          "icon": "$(flame)",
-          "name": "eplusTestsView",
-          "contents": "No tests found. [Create a new test](command:egain-eureka-plus.recordNewTest)",
-          "when": "view == eplusTestsView"
         }
       ]
     },
@@ -164,7 +155,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "deploy": "vsce publish"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",

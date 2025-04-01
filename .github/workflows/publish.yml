@@ -1,0 +1,36 @@
+name: "Eureka Playwright Release"
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_ACCESS_TOKEN }}
+        run: npx semantic-release
+
+      - name: Publish to Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT  }}
+        run: npm run deploy
