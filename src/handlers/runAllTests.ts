@@ -36,6 +36,7 @@ export default async function ({
 
           return common.runProcess({
             command: command,
+            context,
             args: ["--ui"],
             onExit: ({ code, resolve }) => {
               if (code === 0) {

@@ -43,7 +43,6 @@ const copyTestFolderFromWorkspaceToExtension = (
   sourceFolderPath: string
 ) => {
   const extensionRoot = common.getExtensionRoot(context);
-  console.log({ sourceFolderPath, exist: fs.existsSync(sourceFolderPath) });
 
   if (sourceFolderPath && fs.existsSync(sourceFolderPath)) {
     const destinationFolderName = sourceFolderPath.split(path.sep).pop() || "";

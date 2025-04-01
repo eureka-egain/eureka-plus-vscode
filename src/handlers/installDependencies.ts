@@ -95,6 +95,7 @@ const setupPlaywright = async (context: vscode.ExtensionContext) => {
           return common.runProcess({
             command: installCommand,
             cwd: extensionRoot,
+            context,
             onError({ error, resolve }) {
               vscode.window.showErrorMessage(
                 `Error setting up Playwright: ${error.message}`
@@ -229,7 +230,6 @@ export default async function (context: vscode.ExtensionContext) {
               nodeFileName.endsWith(".tar.gz") ||
               nodeFileName.endsWith(".tar.xz")
             ) {
-              console.log({ localNodeArchive, localNodePath });
               await tar.extract({
                 file: localNodeArchive,
                 cwd: localNodePath,

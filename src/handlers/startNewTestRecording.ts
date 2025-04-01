@@ -118,6 +118,7 @@ export default function ({
                 command: `${common.getNodePath(
                   context
                 )} ${common.getPlaywrightCLIPath(context)} codegen`,
+                context,
                 args: [
                   `--output=${tempPaths.specFile}`,
                   `--save-storage=${tempPaths.storageFile}`,

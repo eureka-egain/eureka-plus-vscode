@@ -118,6 +118,7 @@ const runProcess = ({
   onExit,
   onStderr,
   onStdout,
+  context,
 }: {
   command: string;
   /**
@@ -154,9 +155,18 @@ const runProcess = ({
     resolve: (value: void | PromiseLike<void>) => void;
     reject: (reason?: any) => void;
   }) => void;
+  context: vscode.ExtensionContext;
 }) => {
+  const extensionRoot = getExtensionRoot(context);
+
   return new Promise<void>((resolve, reject) => {
-    const process = spawn(command, args ?? [], { shell: true, cwd });
+    const process = spawn(command, args ?? [], {
+      shell: true,
+      cwd,
+      env: {
+        PLAYWRIGHT_BROWSERS_PATH: path.join(extensionRoot, "browsers"),
+      },
+    });
 
     // Log stdout and stderr for debugging
     process.stdout.on("data", (data) => {
