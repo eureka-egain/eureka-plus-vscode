@@ -6,6 +6,13 @@ module.exports = {
         "@semantic-release/commit-analyzer", // Analyzes commits to determine version bump
         "@semantic-release/release-notes-generator", // Generates release notes
         "@semantic-release/changelog", // Updates the CHANGELOG.md file
+        [
+            "@semantic-release/exec",
+            {
+                prepareCmd:
+                    "node ./utils/update-package-version.js ${nextRelease.version}",
+            },
+        ],
         "@semantic-release/github",
         [
             "@semantic-release/git",
@@ -14,6 +21,6 @@ module.exports = {
                 message:
                     "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
             },
-        ],
+        ]
     ],
 };
