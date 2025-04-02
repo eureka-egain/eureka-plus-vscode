@@ -42,7 +42,7 @@ const installBrowsers = async (context: vscode.ExtensionContext) => {
 
     vscode.window
       .showInformationMessage(
-        "Playwright browsers are required to run the tests.\n\nThese are essential for the functionality of the extension.",
+        "Playwright browsers are required to run the tests.\n\nThis process can take some time (~10m).",
         "Install",
         "No"
       )
@@ -52,15 +52,87 @@ const installBrowsers = async (context: vscode.ExtensionContext) => {
           const browserInstallCommand = `${common.getNodePath(
             context
           )} ${common.getPlaywrightCLIPath(context)} install`;
-          const terminal = vscode.window.createTerminal({
-            name: "Eureka+ Install Browsers",
-            shellPath: os.platform() === "win32" ? "cmd.exe" : undefined,
-            env: {
-              PLAYWRIGHT_BROWSERS_PATH: path.join(extensionRoot, "browsers"),
+          vscode.window.withProgress(
+            {
+              location: vscode.ProgressLocation.Notification,
+              title: "Eureka+",
+              cancellable: false,
             },
-          });
-          terminal.show();
-          terminal.sendText(browserInstallCommand);
+            async (progress) => {
+              progress.report({ message: "Installing browser binaries" });
+
+              const extensionRoot = common.getExtensionRoot(context);
+              await common.runProcess({
+                // env with the path to the browsers folder
+                // is setup in the common.ts file
+                command: browserInstallCommand,
+                cwd: extensionRoot,
+                context,
+                onStderr: ({ data, resolve }) => {
+                  vscode.window.showErrorMessage(`Stderr: ${data}`);
+                  resolve();
+                },
+                onError({ error, resolve }) {
+                  console.log(error);
+                  vscode.window.showErrorMessage(
+                    `Error installing browsers: ${error.message}`
+                  );
+                  resolve();
+                },
+                onExit({ code, resolve }) {
+                  if (code === 0) {
+                    vscode.window.showInformationMessage(
+                      `Browser binaries installed successfully`
+                    );
+                    resolve();
+                  } else {
+                    vscode.window.showErrorMessage(
+                      `Error installing browsers: ${code}`
+                    );
+                    resolve();
+                  }
+                },
+              });
+
+              // Install dependencies only if the OS is Linux
+              if (os.platform() === "linux") {
+                progress.report({
+                  message: "Installing Linux dependencies...",
+                });
+
+                const depsInstallCommand = `${common.getNodePath(
+                  context
+                )} ${common.getPlaywrightCLIPath(context)} install-deps`;
+                await common.runProcess({
+                  command: depsInstallCommand,
+                  context,
+                  onStderr: ({ data, resolve }) => {
+                    vscode.window.showErrorMessage(`Stderr: ${data}`);
+                    resolve();
+                  },
+                  onError({ error, resolve }) {
+                    vscode.window.showErrorMessage(
+                      `Error installing dependencies: ${error.message}`
+                    );
+                    resolve();
+                  },
+                  onExit({ code, resolve }) {
+                    if (code === 0) {
+                      vscode.window.showInformationMessage(
+                        `Linux dependencies installed successfully`
+                      );
+                    } else {
+                      vscode.window.showErrorMessage(
+                        `Error installing dependencies: ${code}`
+                      );
+                    }
+                    resolve();
+                  },
+                });
+              }
+              return;
+            }
+          );
         } else {
           vscode.window.showInformationMessage(
             "Eureka+ will not be functional now. You can invoke this setup again from the Eureka+ Explorer View."
