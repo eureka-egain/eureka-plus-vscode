@@ -180,7 +180,7 @@ const setupPlaywright = async (context: vscode.ExtensionContext) => {
   if (common.nodePathExists(context)) {
     // check if ".bin" folder exists
     const binFolderPath = path.join(extensionRoot, "node_modules", ".bin");
-    if (!fs.pathExists(binFolderPath)) {
+    if (!fs.pathExistsSync(binFolderPath)) {
       // run npm install in extension root
       vscode.window.withProgress(
         {

@@ -47,7 +47,7 @@ const nodePathExists = (context: vscode.ExtensionContext) => {
     case "win32":
       return fs.existsSync(nodePath);
     default:
-      return fs.pathExists(nodePath);
+      return fs.pathExistsSync(nodePath);
   }
 };
 
