@@ -22,6 +22,13 @@ const getPlaywrightCLIPath = (context: vscode.ExtensionContext) => {
 
 // ---------------------------------------------------------------
 
+const getPromptsPath = (context: vscode.ExtensionContext) => {
+  const extensionRoot = getExtensionRoot(context);
+  return path.join(extensionRoot, "prompts");
+};
+
+// ---------------------------------------------------------------
+
 const getNodePath = (context: vscode.ExtensionContext) => {
   const extensionRoot = getExtensionRoot(context);
   switch (os.platform()) {
@@ -259,4 +266,5 @@ export const common = {
   getNPM,
   getPlaywrightCLIPath,
   nodePathExists,
+  getPromptsPath,
 };

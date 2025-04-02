@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { TreeViewProvider } from "./providers/TreeViewProvider";
 import { handlers } from "./handlers";
-import { common } from "./utils/common";
 import path from "path";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -134,10 +133,21 @@ export function activate(context: vscode.ExtensionContext) {
 
   // VIEW TEST SUMMARY
   context.subscriptions.push(
-    vscode.commands.registerCommand("egain-eureka-plus.viewTestSummary", () => {
-      // TODO: Implement this
-      common.showInDevelopementNotification();
-    })
+    vscode.commands.registerCommand(
+      "egain-eureka-plus.viewTestSummary",
+      (treeItem: vscode.TreeItem) => {
+        if (treeItem.resourceUri?.fsPath) {
+          handlers.generateSummary({
+            context,
+            pathToTestFile: treeItem.resourceUri?.fsPath,
+          });
+        } else {
+          vscode.window.showErrorMessage(
+            "Unable to generate summary. Test file path is not available."
+          );
+        }
+      }
+    )
   );
 
   // RUN TEST
