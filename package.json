@@ -54,6 +54,10 @@
         "title": "Install dependencies"
       },
       {
+        "command": "egain-eureka-plus.updateGenAIKey",
+        "title": "Update GenAI Key"
+      },
+      {
         "command": "egain-eureka-plus.refreshTreeView",
         "title": "Refresh",
         "icon": "$(refresh)"
@@ -122,6 +126,11 @@
           "group": "2_inline@2"
         },
         {
+          "command": "egain-eureka-plus.updateGenAIKey",
+          "when": "view == eplusTestsView",
+          "group": "1_inline@2"
+        },
+        {
           "command": "egain-eureka-plus.installDependencies",
           "when": "view == eplusTestsView",
           "group": "2_inline@2"
@@ -175,6 +184,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.0",
     "@playwright/test": "https://github.com/eureka-egain/eureka-plus/releases/download/1.51.0-1.6.0/pw-test.tgz",
     "adm-zip": "^0.5.16",
     "fs-extra": "^11.3.0",

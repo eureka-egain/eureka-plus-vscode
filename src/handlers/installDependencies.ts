@@ -9,8 +9,37 @@ import { promisify } from "util";
 import { createWriteStream } from "fs";
 import * as tar from "tar";
 import AdmZip from "adm-zip";
+import { secretStorageGeminiAPITokenKey } from "../utils/constants";
 
 const streamPipeline = promisify(pipeline);
+
+const getGeminiAPIKey = async (context: vscode.ExtensionContext) => {
+  // Retrieve the API key from secure storage
+  let apiKey = await context.secrets.get(secretStorageGeminiAPITokenKey);
+
+  // If the API key is not found, prompt the user to enter it
+  if (!apiKey) {
+    apiKey = await vscode.window.showInputBox({
+      prompt: "Enter your Gemini AI API Key",
+      placeHolder: "This key is required to use GenAI features",
+      ignoreFocusOut: true,
+      password: true,
+    });
+
+    if (!apiKey) {
+      vscode.window.showErrorMessage(
+        "GenAI features will not be functional now. You can invoke this setup again from the Eureka+ Explorer View."
+      );
+      return;
+    }
+
+    // Store the API key securely
+    await context.secrets.store(secretStorageGeminiAPITokenKey, apiKey);
+    vscode.window.showInformationMessage("API Key saved securely.");
+  } else {
+    console.log("Gemini API Key already exists.");
+  }
+};
 
 const installBrowsers = async (context: vscode.ExtensionContext) => {
   const extensionRoot = common.getExtensionRoot(context);
@@ -37,6 +66,7 @@ const installBrowsers = async (context: vscode.ExtensionContext) => {
 
     if (areBrowsersInstalled) {
       console.log("All required Playwright browsers are already installed.");
+      getGeminiAPIKey(context);
       return;
     }
 
@@ -84,6 +114,7 @@ const installBrowsers = async (context: vscode.ExtensionContext) => {
                     vscode.window.showInformationMessage(
                       `Browser binaries installed successfully`
                     );
+                    getGeminiAPIKey(context);
                     resolve();
                   } else {
                     vscode.window.showErrorMessage(
@@ -191,6 +222,7 @@ const setupPlaywright = async (context: vscode.ExtensionContext) => {
         }
       );
     } else {
+      console.log("Playwright is already setup.");
       installBrowsers(context);
     }
   }
@@ -357,6 +389,7 @@ export default async function (context: vscode.ExtensionContext) {
       );
     }
   } else {
+    console.log("Node.js is already installed.");
     setupPlaywright(context);
   }
 }

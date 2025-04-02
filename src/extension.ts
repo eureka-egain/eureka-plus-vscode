@@ -42,6 +42,13 @@ export function activate(context: vscode.ExtensionContext) {
     )
   );
 
+  // UPDATE GENAI KEY
+  context.subscriptions.push(
+    vscode.commands.registerCommand("egain-eureka-plus.updateGenAIKey", () => {
+      handlers.updateGenAIKey(context);
+    })
+  );
+
   // REFRESH TREE VIEW
   context.subscriptions.push(
     vscode.commands.registerCommand("egain-eureka-plus.refreshTreeView", () => {

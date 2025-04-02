@@ -4,3 +4,4 @@ export const defaultTestsFolderName = "eplus-tests";
 export const eurekaPlusConfigFileName = "eureka.json";
 export const eurekaPlusConfigFileVersion = "1.0";
 // ---------------------------------------------------------------
+export const secretStorageGeminiAPITokenKey = "googleGenerativeAIKey";
