@@ -3,7 +3,7 @@
   "displayName": "eGain Eureka+",
   "description": "UI Testing for the everyday man",
   "icon": "assets/logo/logo_transparent_128.png",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "license": "MIT",
   "publisher": "rraj-egain",
   "repository": "https://github.com/eureka-egain/eureka-plus-vscode",
