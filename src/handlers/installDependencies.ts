@@ -98,10 +98,6 @@ const installBrowsers = async (context: vscode.ExtensionContext) => {
                 command: browserInstallCommand,
                 cwd: extensionRoot,
                 context,
-                onStderr: ({ data, resolve }) => {
-                  vscode.window.showErrorMessage(`Stderr: ${data}`);
-                  resolve();
-                },
                 onError({ error, resolve }) {
                   console.log(error);
                   vscode.window.showErrorMessage(
@@ -180,7 +176,7 @@ const setupPlaywright = async (context: vscode.ExtensionContext) => {
   if (common.nodePathExists(context)) {
     // check if ".bin" folder exists
     const binFolderPath = path.join(extensionRoot, "node_modules", ".bin");
-    if (!fs.pathExistsSync(binFolderPath)) {
+    if (!fs.pathExistsSync(binFolderPath) || true) {
       // run npm install in extension root
       vscode.window.withProgress(
         {
@@ -194,11 +190,18 @@ const setupPlaywright = async (context: vscode.ExtensionContext) => {
           const installCommand = `${pathToNode} ${common.getNPM(
             context
           )} install`;
+          console.log("Running command:", installCommand);
 
           return common.runProcess({
             command: installCommand,
             cwd: extensionRoot,
             context,
+            onStdout({ data }) {
+              progress.report({
+                message: `Setting up Playwright: ${data}`,
+              });
+              console.log(data);
+            },
             onError({ error, resolve }) {
               vscode.window.showErrorMessage(
                 `Error setting up Playwright: ${error.message}`
