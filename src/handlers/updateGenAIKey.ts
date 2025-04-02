@@ -10,6 +10,10 @@ export default async function (context: vscode.ExtensionContext) {
   });
 
   if (!apiKey) {
+    return;
+  }
+
+  if (apiKey === "") {
     vscode.window.showErrorMessage(
       "GenAI features will not be functional now. You can invoke this setup again from the Eureka+ Explorer View."
     );
