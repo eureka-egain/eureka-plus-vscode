@@ -5,23 +5,17 @@ import { movers } from "../utils/movers";
 import { paths } from "../utils/paths";
 
 export default async function ({
-  context,
   testFileName,
   testFolderPath,
 }: {
-  context: vscode.ExtensionContext;
   testFolderPath: string;
   testFileName: string;
 }) {
-  const copyTestFolderResult = movers.copyTestFolderFromWorkspaceToExtension(
-    context,
-    testFolderPath
-  );
+  const copyTestFolderResult =
+    movers.copyTestFolderFromWorkspaceToRuntime(testFolderPath);
 
   if (copyTestFolderResult) {
-    const command = `${paths.getNodePath(context)} ${paths.getPlaywrightCLIPath(
-      context
-    )} test ${common.formatPathForPW(
+    const command = `${paths.getNodePath()} ${paths.getPlaywrightCLIPath()} test ${common.formatPathForPW(
       path.join(copyTestFolderResult.destinationFolder, testFileName)
     )} --ui`;
 
@@ -36,13 +30,12 @@ export default async function ({
 
         return common.runProcess({
           command: command,
-          context,
           args: ["--ui"],
           onExit: ({ code, resolve }) => {
             if (code === 0) {
               copyTestFolderResult.cleanup();
               // move generated test results back to workspace
-              movers.moveTestResultsFolderToWorkspace(context);
+              movers.moveTestResultsFolderToWorkspace();
             } else {
               vscode.window.showErrorMessage(`Error: ${code}`);
             }
@@ -58,7 +51,7 @@ export default async function ({
             copyTestFolderResult.cleanup();
             resolve();
           },
-          cwd: paths.getExtensionRoot(context),
+          cwd: paths.getExtensionUserRuntimeFolder(),
         });
       }
     );

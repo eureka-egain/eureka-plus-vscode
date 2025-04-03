@@ -14,9 +14,9 @@ import path from "path";
 import { common } from "./common";
 import { paths } from "./paths";
 
-const moveTestResultsFolderToWorkspace = (context: vscode.ExtensionContext) => {
+const moveTestResultsFolderToWorkspace = () => {
   const workspaceRoot = paths.getWorkspaceRoot();
-  const extensionRoot = paths.getExtensionRoot(context);
+  const extensionRoot = paths.getExtensionUserRuntimeFolder();
 
   if (workspaceRoot && fs.existsSync(workspaceRoot)) {
     const testResultsFolder = path.join(extensionRoot, "test-results");
@@ -39,11 +39,8 @@ const moveTestResultsFolderToWorkspace = (context: vscode.ExtensionContext) => {
  * - destinationFolder: the path to the copied folder in the extension folder
  * - cleanup: a function to remove the copied folder from the extension folder
  */
-const copyTestFolderFromWorkspaceToExtension = (
-  context: vscode.ExtensionContext,
-  sourceFolderPath: string
-) => {
-  const extensionRoot = paths.getExtensionRoot(context);
+const copyTestFolderFromWorkspaceToRuntime = (sourceFolderPath: string) => {
+  const extensionRoot = paths.getExtensionUserRuntimeFolder();
 
   if (sourceFolderPath && fs.existsSync(sourceFolderPath)) {
     const destinationFolderName = sourceFolderPath.split(path.sep).pop() || "";
@@ -66,5 +63,5 @@ const copyTestFolderFromWorkspaceToExtension = (
 
 export const movers = {
   moveTestResultsFolderToWorkspace,
-  copyTestFolderFromWorkspaceToExtension,
+  copyTestFolderFromWorkspaceToRuntime,
 };

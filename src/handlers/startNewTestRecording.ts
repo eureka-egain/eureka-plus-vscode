@@ -116,10 +116,7 @@ export default function ({
 
               // Run codegen to start the recording
               return common.runProcess({
-                command: `${paths.getNodePath(
-                  context
-                )} ${paths.getPlaywrightCLIPath(context)} codegen`,
-                context,
+                command: `${paths.getNodePath()} ${paths.getPlaywrightCLIPath()} codegen`,
                 args: [
                   `--output=${tempPaths.specFile}`,
                   `--save-storage=${tempPaths.storageFile}`,

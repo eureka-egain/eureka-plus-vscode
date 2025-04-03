@@ -50,7 +50,6 @@ const runProcess = ({
   onExit,
   onStderr,
   onStdout,
-  context,
 }: {
   command: string;
   /**
@@ -87,10 +86,7 @@ const runProcess = ({
     resolve: (value: void | PromiseLike<void>) => void;
     reject: (reason?: any) => void;
   }) => void;
-  context: vscode.ExtensionContext;
 }) => {
-  const extensionRoot = paths.getExtensionRoot(context);
-
   return new Promise<void>((resolve, reject) => {
     const process = spawn(command, args ?? [], {
       shell: true,

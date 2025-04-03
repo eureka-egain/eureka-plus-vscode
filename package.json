@@ -50,8 +50,8 @@
         "icon": "$(gear)"
       },
       {
-        "command": "egain-eureka-plus.installDependencies",
-        "title": "Install dependencies"
+        "command": "egain-eureka-plus.setup",
+        "title": "Setup Eureka+"
       },
       {
         "command": "egain-eureka-plus.updateGenAIKey",
@@ -136,7 +136,7 @@
           "group": "1_inline@2"
         },
         {
-          "command": "egain-eureka-plus.installDependencies",
+          "command": "egain-eureka-plus.setup",
           "when": "view == eplusTestsView",
           "group": "2_inline@2"
         },

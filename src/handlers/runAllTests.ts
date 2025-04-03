@@ -4,25 +4,17 @@ import { common } from "../utils/common";
 import { movers } from "../utils/movers";
 import { paths } from "../utils/paths";
 
-export default async function ({
-  context,
-}: {
-  context: vscode.ExtensionContext;
-}) {
+export default async function () {
   const workspaceRoot = paths.getWorkspaceRoot();
   const testsFolderName = common.getExtensionSettings().testsFolderName;
 
   if (workspaceRoot) {
     const pathToTestFolder = path.join(workspaceRoot, testsFolderName);
-    const copyTestFolderResult = movers.copyTestFolderFromWorkspaceToExtension(
-      context,
-      pathToTestFolder
-    );
+    const copyTestFolderResult =
+      movers.copyTestFolderFromWorkspaceToRuntime(pathToTestFolder);
 
     if (copyTestFolderResult) {
-      const command = `${paths.getNodePath(
-        context
-      )} ${paths.getPlaywrightCLIPath(context)} test ${common.formatPathForPW(
+      const command = `${paths.getNodePath()} ${paths.getPlaywrightCLIPath()} test ${common.formatPathForPW(
         copyTestFolderResult.destinationFolder
       )} --ui`;
 
@@ -37,13 +29,12 @@ export default async function ({
 
           return common.runProcess({
             command: command,
-            context,
             args: ["--ui"],
             onExit: ({ code, resolve }) => {
               if (code === 0) {
                 copyTestFolderResult.cleanup();
                 // move generated test results back to workspace
-                movers.moveTestResultsFolderToWorkspace(context);
+                movers.moveTestResultsFolderToWorkspace();
               } else {
                 vscode.window.showErrorMessage(`Error: ${code}`);
               }
@@ -59,7 +50,7 @@ export default async function ({
               copyTestFolderResult.cleanup();
               resolve();
             },
-            cwd: paths.getExtensionRoot(context),
+            cwd: paths.getExtensionUserRuntimeFolder(),
           });
         }
       );

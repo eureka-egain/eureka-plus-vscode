@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // ---------------------------------------------------------------
 
-  handlers.installDependencies(context);
+  handlers.setup(context);
 
   // ---------------------------------------------------------------
 
@@ -33,12 +33,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   // INSTALL DEPENDENCIES
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "egain-eureka-plus.installDependencies",
-      () => {
-        handlers.installDependencies(context);
-      }
-    )
+    vscode.commands.registerCommand("egain-eureka-plus.setup", () => {
+      handlers.setup(context);
+    })
   );
 
   // UPDATE GENAI KEY
@@ -70,9 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
   // RUN ALL TEST CASES
   context.subscriptions.push(
     vscode.commands.registerCommand("egain-eureka-plus.runAllTests", () => {
-      handlers.runAllTests({
-        context,
-      });
+      handlers.runAllTests();
     })
   );
 
@@ -96,7 +91,6 @@ export function activate(context: vscode.ExtensionContext) {
         const pathToFolder = treeItem.resourceUri?.fsPath;
         if (pathToFolder) {
           handlers.runTestInFolder({
-            context,
             folderPath: pathToFolder,
           });
         }
@@ -163,7 +157,6 @@ export function activate(context: vscode.ExtensionContext) {
           );
           const testFileName = path.basename(testPath);
           handlers.runTest({
-            context,
             testFolderPath,
             testFileName,
           });

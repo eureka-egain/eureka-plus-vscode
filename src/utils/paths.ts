@@ -2,7 +2,7 @@ import * as os from "os";
 import path from "path";
 import * as vscode from "vscode";
 
-// -----------------------------------------------ß---------------- EXTENSION
+// --------------------------------------------------------------- EXTENSION
 
 const getExtensionRoot = (context: vscode.ExtensionContext) => {
   return context.extensionPath;
@@ -15,16 +15,26 @@ const getExtensionUserFolder = () => {
   return path.join(homeDirectory, ".eureka-plus");
 };
 
+// ---------------------------------------------------------------
+
+const getExtensionUserRuntimeFolder = () => {
+  return path.join(getExtensionUserFolder(), "runtime");
+};
+
 // --------------------------------------------------------------- PLAYWRIGHT
 
-const getPlaywrightCLIPath = (context: vscode.ExtensionContext) => {
-  const extensionRoot = getExtensionRoot(context);
-  return path.join(extensionRoot, "node_modules", "playwright", "cli.js");
+const getPlaywrightCLIPath = () => {
+  return path.join(
+    getExtensionUserRuntimeFolder(),
+    "node_modules",
+    "playwright",
+    "cli.js"
+  );
 };
 
 // --------------------------------------------------------------- NODE
 
-const getNodePath = (context: vscode.ExtensionContext) => {
+const getNodePath = () => {
   switch (os.platform()) {
     case "win32":
       return path.join(getExtensionUserFolder(), "node", "node.exe");
@@ -67,7 +77,7 @@ const getWorkspaceRoot = () => {
 // --------------------------------------------------------------- BROWSERS
 
 const getBrowsersPath = () => {
-  return path.join(getExtensionUserFolder(), "browsers");
+  return path.join(getExtensionUserRuntimeFolder(), "browsers");
 };
 
 // --------------------------------------------------------------- EXPORT
@@ -80,4 +90,5 @@ export const paths = {
   getPlaywrightCLIPath,
   getWorkspaceRoot,
   getBrowsersPath,
+  getExtensionUserRuntimeFolder,
 };

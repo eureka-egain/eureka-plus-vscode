@@ -4,22 +4,12 @@ import { movers } from "../utils/movers";
 import path from "path";
 import { paths } from "../utils/paths";
 
-export default async function ({
-  context,
-  folderPath,
-}: {
-  context: vscode.ExtensionContext;
-  folderPath: string;
-}) {
-  const copyTestFolderResult = movers.copyTestFolderFromWorkspaceToExtension(
-    context,
-    folderPath
-  );
+export default async function ({ folderPath }: { folderPath: string }) {
+  const copyTestFolderResult =
+    movers.copyTestFolderFromWorkspaceToRuntime(folderPath);
 
   if (copyTestFolderResult) {
-    const command = `${paths.getNodePath(context)} ${paths.getPlaywrightCLIPath(
-      context
-    )} test ${common.formatPathForPW(
+    const command = `${paths.getNodePath()} ${paths.getPlaywrightCLIPath()} test ${common.formatPathForPW(
       copyTestFolderResult.destinationFolder
     )} --ui`;
 
@@ -34,13 +24,12 @@ export default async function ({
 
         return common.runProcess({
           command: command,
-          context,
           args: ["--ui"],
           onExit: ({ code, resolve }) => {
             if (code === 0) {
               copyTestFolderResult.cleanup();
               // move generated test results back to workspace
-              movers.moveTestResultsFolderToWorkspace(context);
+              movers.moveTestResultsFolderToWorkspace();
             } else {
               vscode.window.showErrorMessage(`Error: ${code}`);
             }
@@ -56,7 +45,7 @@ export default async function ({
             copyTestFolderResult.cleanup();
             resolve();
           },
-          cwd: paths.getExtensionRoot(context),
+          cwd: paths.getExtensionUserRuntimeFolder(),
         });
       }
     );
