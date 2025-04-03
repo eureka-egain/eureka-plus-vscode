@@ -2,9 +2,13 @@ import * as vscode from "vscode";
 import { secretStorageGeminiAPITokenKey } from "../utils/constants";
 
 export default async function (context: vscode.ExtensionContext) {
+  vscode.window.showInformationMessage(
+    "Click [here](https://aistudio.google.com/app/apikey) to get your own Gemini AI API Key."
+  );
   const apiKey = await vscode.window.showInputBox({
-    prompt: "Enter your new Gemini AI API Key",
-    placeHolder: "This key is required to use GenAI features",
+    prompt: "Enter your Gemini AI API Key",
+    placeHolder:
+      "This key is securely stored and used for all AI powered features.",
     ignoreFocusOut: true,
     password: true,
   });
@@ -15,7 +19,7 @@ export default async function (context: vscode.ExtensionContext) {
 
   if (apiKey === "") {
     vscode.window.showErrorMessage(
-      "GenAI features will not be functional now. You can invoke this setup again from the Eureka+ Explorer View."
+      "AI powered features require an API key. You can invoke this setup again from the Eureka+ Explorer View."
     );
     return;
   }

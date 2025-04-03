@@ -55,7 +55,7 @@
       },
       {
         "command": "egain-eureka-plus.updateGenAIKey",
-        "title": "Update GenAI Key"
+        "title": "Update Gemini Key"
       },
       {
         "command": "egain-eureka-plus.refreshTreeView",

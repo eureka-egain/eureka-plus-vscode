@@ -2,13 +2,14 @@ import * as vscode from "vscode";
 import { TreeViewProvider } from "./providers/TreeViewProvider";
 import { handlers } from "./handlers";
 import path from "path";
+import { secretStorageGeminiAPITokenKey } from "./utils/constants";
 
 export function activate(context: vscode.ExtensionContext) {
   // Register the Tree View
   const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 
   // ---------------------------------------------------------------
-
+  context.secrets.delete(secretStorageGeminiAPITokenKey);
   handlers.setup(context);
 
   // ---------------------------------------------------------------

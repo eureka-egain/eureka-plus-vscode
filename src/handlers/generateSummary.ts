@@ -78,9 +78,6 @@ export default async function ({
       });
       const genAI = await getGenAI(context);
       if (!genAI) {
-        vscode.window.showErrorMessage(
-          "Unable to initialize the Generative AI model. Please check your API key."
-        );
         return;
       }
       const model = genAI.getGenerativeModel({
