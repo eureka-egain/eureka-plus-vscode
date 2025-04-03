@@ -190,10 +190,8 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
-    "@playwright/test": "https://github.com/eureka-egain/eureka-plus/releases/download/1.51.0-1.6.0/pw-test.tgz",
     "adm-zip": "^0.5.16",
     "fs-extra": "^11.3.0",
-    "playwright": "https://github.com/eureka-egain/eureka-plus/releases/download/1.51.0-1.6.0/pw.tgz",
     "tar": "^7.4.3"
   }
 }
