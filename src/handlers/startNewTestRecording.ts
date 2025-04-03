@@ -7,6 +7,7 @@ import {
   eurekaPlusConfigFileVersion,
 } from "../utils/constants";
 import { EurekaPlusConfigFile } from "../utils/types";
+import { paths } from "../utils/paths";
 
 export default function ({
   context,
@@ -87,8 +88,8 @@ export default function ({
               progress.report({ message: "Test recording in progress" });
 
               // Use the recording name and initial URL to save the recording
-              const workspaceRoot = common.getWorkspaceRoot();
-              const extensionRoot = common.getExtensionRoot(context);
+              const workspaceRoot = paths.getWorkspaceRoot();
+              const extensionRoot = paths.getExtensionRoot(context);
               if (!workspaceRoot) {
                 vscode.window.showErrorMessage("No workspace folder found.");
                 return;
@@ -115,9 +116,9 @@ export default function ({
 
               // Run codegen to start the recording
               return common.runProcess({
-                command: `${common.getNodePath(
+                command: `${paths.getNodePath(
                   context
-                )} ${common.getPlaywrightCLIPath(context)} codegen`,
+                )} ${paths.getPlaywrightCLIPath(context)} codegen`,
                 context,
                 args: [
                   `--output=${tempPaths.specFile}`,

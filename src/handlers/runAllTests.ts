@@ -2,13 +2,14 @@ import path from "path";
 import * as vscode from "vscode";
 import { common } from "../utils/common";
 import { movers } from "../utils/movers";
+import { paths } from "../utils/paths";
 
 export default async function ({
   context,
 }: {
   context: vscode.ExtensionContext;
 }) {
-  const workspaceRoot = common.getWorkspaceRoot();
+  const workspaceRoot = paths.getWorkspaceRoot();
   const testsFolderName = common.getExtensionSettings().testsFolderName;
 
   if (workspaceRoot) {
@@ -19,9 +20,9 @@ export default async function ({
     );
 
     if (copyTestFolderResult) {
-      const command = `${common.getNodePath(
+      const command = `${paths.getNodePath(
         context
-      )} ${common.getPlaywrightCLIPath(context)} test ${common.formatPathForPW(
+      )} ${paths.getPlaywrightCLIPath(context)} test ${common.formatPathForPW(
         copyTestFolderResult.destinationFolder
       )} --ui`;
 
@@ -58,7 +59,7 @@ export default async function ({
               copyTestFolderResult.cleanup();
               resolve();
             },
-            cwd: common.getExtensionRoot(context),
+            cwd: paths.getExtensionRoot(context),
           });
         }
       );

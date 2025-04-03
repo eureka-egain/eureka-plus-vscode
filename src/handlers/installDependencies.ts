@@ -10,8 +10,19 @@ import { createWriteStream } from "fs";
 import * as tar from "tar";
 import AdmZip from "adm-zip";
 import { secretStorageGeminiAPITokenKey } from "../utils/constants";
+import { paths } from "../utils/paths";
 
 const streamPipeline = promisify(pipeline);
+
+const doesNodePathExists = (context: vscode.ExtensionContext) => {
+  const nodePath = paths.getNodePath(context);
+  switch (os.platform()) {
+    case "win32":
+      return fs.existsSync(nodePath);
+    default:
+      return fs.pathExistsSync(nodePath);
+  }
+};
 
 const getGeminiAPIKey = async (context: vscode.ExtensionContext) => {
   // Retrieve the API key from secure storage
@@ -42,9 +53,9 @@ const getGeminiAPIKey = async (context: vscode.ExtensionContext) => {
 };
 
 const installBrowsers = async (context: vscode.ExtensionContext) => {
-  const extensionRoot = common.getExtensionRoot(context);
+  const extensionRoot = paths.getExtensionRoot(context);
 
-  if (common.nodePathExists(context)) {
+  if (doesNodePathExists(context)) {
     // Path to the browsers folder
     const browsersPath = path.join(extensionRoot, "browsers");
 
@@ -79,9 +90,9 @@ const installBrowsers = async (context: vscode.ExtensionContext) => {
       .then((selection) => {
         if (selection === "Install") {
           // Install browser binaries
-          const browserInstallCommand = `${common.getNodePath(
+          const browserInstallCommand = `${paths.getNodePath(
             context
-          )} ${common.getPlaywrightCLIPath(context)} install`;
+          )} ${paths.getPlaywrightCLIPath(context)} install`;
           vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Notification,
@@ -91,7 +102,7 @@ const installBrowsers = async (context: vscode.ExtensionContext) => {
             async (progress) => {
               progress.report({ message: "Installing browser binaries" });
 
-              const extensionRoot = common.getExtensionRoot(context);
+              const extensionRoot = paths.getExtensionRoot(context);
               await common.runProcess({
                 // env with the path to the browsers folder
                 // is setup in the common.ts file
@@ -127,9 +138,9 @@ const installBrowsers = async (context: vscode.ExtensionContext) => {
                   message: "Installing Linux dependencies...",
                 });
 
-                const depsInstallCommand = `${common.getNodePath(
+                const depsInstallCommand = `${paths.getNodePath(
                   context
-                )} ${common.getPlaywrightCLIPath(context)} install-deps`;
+                )} ${paths.getPlaywrightCLIPath(context)} install-deps`;
                 await common.runProcess({
                   command: depsInstallCommand,
                   context,
@@ -170,10 +181,10 @@ const installBrowsers = async (context: vscode.ExtensionContext) => {
 };
 
 const setupPlaywright = async (context: vscode.ExtensionContext) => {
-  const pathToNode = common.getNodePath(context);
-  const extensionRoot = common.getExtensionRoot(context);
+  const pathToNode = paths.getNodePath(context);
+  const extensionRoot = paths.getExtensionRoot(context);
 
-  if (common.nodePathExists(context)) {
+  if (doesNodePathExists(context)) {
     // check if ".bin" folder exists
     const binFolderPath = path.join(extensionRoot, "node_modules", ".bin");
     if (!fs.pathExistsSync(binFolderPath) || true) {
@@ -187,9 +198,7 @@ const setupPlaywright = async (context: vscode.ExtensionContext) => {
         async (progress) => {
           progress.report({ message: "Setting up Playwright..." });
 
-          const installCommand = `${pathToNode} ${common.getNPM(
-            context
-          )} install`;
+          const installCommand = `${pathToNode} ${paths.getNPMPath()} install`;
           console.log("Running command:", installCommand);
 
           return common.runProcess({
@@ -232,9 +241,9 @@ const setupPlaywright = async (context: vscode.ExtensionContext) => {
 };
 
 export default async function (context: vscode.ExtensionContext) {
-  const extensionRoot = common.getExtensionRoot(context);
+  const extensionRoot = paths.getExtensionRoot(context);
 
-  if (!common.nodePathExists(context)) {
+  if (!doesNodePathExists(context)) {
     // Determine the user's OS and architecture
     const platform = os.platform();
     const arch = os.arch();

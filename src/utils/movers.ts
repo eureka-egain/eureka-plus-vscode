@@ -12,10 +12,11 @@ import * as vscode from "vscode";
 import fs from "fs-extra";
 import path from "path";
 import { common } from "./common";
+import { paths } from "./paths";
 
 const moveTestResultsFolderToWorkspace = (context: vscode.ExtensionContext) => {
-  const workspaceRoot = common.getWorkspaceRoot();
-  const extensionRoot = common.getExtensionRoot(context);
+  const workspaceRoot = paths.getWorkspaceRoot();
+  const extensionRoot = paths.getExtensionRoot(context);
 
   if (workspaceRoot && fs.existsSync(workspaceRoot)) {
     const testResultsFolder = path.join(extensionRoot, "test-results");
@@ -42,7 +43,7 @@ const copyTestFolderFromWorkspaceToExtension = (
   context: vscode.ExtensionContext,
   sourceFolderPath: string
 ) => {
-  const extensionRoot = common.getExtensionRoot(context);
+  const extensionRoot = paths.getExtensionRoot(context);
 
   if (sourceFolderPath && fs.existsSync(sourceFolderPath)) {
     const destinationFolderName = sourceFolderPath.split(path.sep).pop() || "";

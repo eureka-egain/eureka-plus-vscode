@@ -2,6 +2,7 @@ import path from "path";
 import * as vscode from "vscode";
 import { common } from "../utils/common";
 import { movers } from "../utils/movers";
+import { paths } from "../utils/paths";
 
 export default async function ({
   context,
@@ -18,9 +19,9 @@ export default async function ({
   );
 
   if (copyTestFolderResult) {
-    const command = `${common.getNodePath(
+    const command = `${paths.getNodePath(context)} ${paths.getPlaywrightCLIPath(
       context
-    )} ${common.getPlaywrightCLIPath(context)} test ${common.formatPathForPW(
+    )} test ${common.formatPathForPW(
       path.join(copyTestFolderResult.destinationFolder, testFileName)
     )} --ui`;
 
@@ -57,7 +58,7 @@ export default async function ({
             copyTestFolderResult.cleanup();
             resolve();
           },
-          cwd: common.getExtensionRoot(context),
+          cwd: paths.getExtensionRoot(context),
         });
       }
     );

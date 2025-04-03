@@ -8,87 +8,7 @@ import {
 } from "./constants";
 import { EurekaPlusConfigFile } from "./types";
 import path from "path";
-
-const getExtensionRoot = (context: vscode.ExtensionContext) => {
-  return context.extensionPath;
-};
-
-// ---------------------------------------------------------------
-
-const getPlaywrightCLIPath = (context: vscode.ExtensionContext) => {
-  const extensionRoot = getExtensionRoot(context);
-  return path.join(extensionRoot, "node_modules", "playwright", "cli.js");
-};
-
-// ---------------------------------------------------------------
-
-const getPromptsPath = (context: vscode.ExtensionContext) => {
-  const extensionRoot = getExtensionRoot(context);
-  return path.join(extensionRoot, "prompts");
-};
-
-// ---------------------------------------------------------------
-
-const getNodePath = (context: vscode.ExtensionContext) => {
-  const extensionRoot = getExtensionRoot(context);
-  switch (os.platform()) {
-    case "win32":
-      return path.join(extensionRoot, "utils", "node", "node.exe");
-    default:
-      return path.join(extensionRoot, "utils", "node", "bin", "node");
-  }
-};
-
-// ---------------------------------------------------------------
-
-const nodePathExists = (context: vscode.ExtensionContext) => {
-  const nodePath = getNodePath(context);
-  switch (os.platform()) {
-    case "win32":
-      return fs.existsSync(nodePath);
-    default:
-      return fs.pathExistsSync(nodePath);
-  }
-};
-
-// ---------------------------------------------------------------
-
-const getNPX = (context: vscode.ExtensionContext) => {
-  const extensionRoot = getExtensionRoot(context);
-  switch (os.platform()) {
-    case "win32":
-      return path.join(extensionRoot, "utils", "node", "node", "npx");
-    default:
-      return path.join(getNodePath(context), "bin", "npx");
-  }
-};
-
-// ---------------------------------------------------------------
-
-const getNPM = (context: vscode.ExtensionContext) => {
-  const extensionRoot = getExtensionRoot(context);
-  switch (os.platform()) {
-    case "win32":
-      return path.join(
-        extensionRoot,
-        "utils",
-        "node",
-        "node_modules",
-        "npm",
-        "index.js"
-      );
-    default:
-      return path.join(
-        extensionRoot,
-        "utils",
-        "node",
-        "lib",
-        "node_modules",
-        "npm",
-        "index.js"
-      );
-  }
-};
+import { paths } from "./paths";
 
 // ---------------------------------------------------------------
 
@@ -118,13 +38,6 @@ const readEurekaPlusConfigFile = (
       initialUrl: "",
     };
   }
-};
-
-// ---------------------------------------------------------------
-
-const getWorkspaceRoot = () => {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  return workspaceFolders?.[0]?.uri?.fsPath;
 };
 
 // ---------------------------------------------------------------
@@ -176,14 +89,14 @@ const runProcess = ({
   }) => void;
   context: vscode.ExtensionContext;
 }) => {
-  const extensionRoot = getExtensionRoot(context);
+  const extensionRoot = paths.getExtensionRoot(context);
 
   return new Promise<void>((resolve, reject) => {
     const process = spawn(command, args ?? [], {
       shell: true,
       cwd,
       env: {
-        PLAYWRIGHT_BROWSERS_PATH: path.join(extensionRoot, "browsers"),
+        PLAYWRIGHT_BROWSERS_PATH: paths.getBrowsersPath(),
       },
     });
 
@@ -253,18 +166,10 @@ const formatPathForPW = (path: string) => {
 // ---------------------------------------------------------------
 
 export const common = {
-  getExtensionRoot,
   getExtensionSettings,
-  getWorkspaceRoot,
   runProcess,
   sanitizeTestName,
   showInDevelopementNotification,
   formatPathForPW,
   readEurekaPlusConfigFile,
-  getNodePath,
-  getNPX,
-  getNPM,
-  getPlaywrightCLIPath,
-  nodePathExists,
-  getPromptsPath,
 };
