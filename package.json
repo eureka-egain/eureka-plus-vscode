@@ -96,12 +96,24 @@
         "icon": "$(list-flat)"
       },
       {
+        "command": "egain-eureka-plus.viewTestSummaryFromEditor",
+        "title": "View Test Summary",
+        "icon": "$(list-flat)"
+      },
+      {
         "command": "egain-eureka-plus.runTest",
         "title": "Run Test",
         "icon": "$(play)"
       }
     ],
     "menus": {
+      "editor/title": [
+        {
+          "command": "egain-eureka-plus.viewTestSummaryFromEditor",
+          "when": "resourceLangId == javascript || resourceLangId == typescript && resourceFilename =~ /.*\\.spec\\.(js|ts)$/",
+          "group": "navigation"
+        }
+      ],
       "view/item/context": [
         {
           "command": "egain-eureka-plus.runAllTestsInFolder",

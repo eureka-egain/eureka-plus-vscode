@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
   const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 
   // ---------------------------------------------------------------
-  context.secrets.delete(secretStorageGeminiAPITokenKey);
+
   handlers.setup(context);
 
   // ---------------------------------------------------------------
@@ -131,10 +131,30 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "egain-eureka-plus.viewTestSummary",
       (treeItem: vscode.TreeItem) => {
+        console.log({ treeItem });
         if (treeItem.resourceUri?.fsPath) {
           handlers.generateSummary({
             context,
             pathToTestFile: treeItem.resourceUri?.fsPath,
+          });
+        } else {
+          vscode.window.showErrorMessage(
+            "Unable to generate summary. Test file path is not available."
+          );
+        }
+      }
+    )
+  );
+
+  // VIEW TEST SUMMARY FROM EDITOR
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "egain-eureka-plus.viewTestSummaryFromEditor",
+      (uri: vscode.Uri) => {
+        if (uri.fsPath) {
+          handlers.generateSummary({
+            context,
+            pathToTestFile: uri.fsPath,
           });
         } else {
           vscode.window.showErrorMessage(
