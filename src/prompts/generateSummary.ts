@@ -10,8 +10,8 @@ A playwright script will be provided as input.
 
 OUTPUT:
 You would output two things, Steps & Summary.
-Steps should be the detailed step by step view of the test case. It should be general language and easily understandable. It should be in HTML format (ol and li tags).
-Summary should be a two line summary of what this test is trying to achieve. Make it simple and quickly understandable.
+Steps should be the detailed step by step view of the test case. It should be general language and easily understandable. It should be in HTML format (ol and li tags). Do not use any technical terms or jargon.
+Summary should be a two or three line summary of what this test is trying to achieve. Make it simple and quickly understandable.
 
 Here is an example:
 

@@ -25,20 +25,23 @@ function getWebviewContent({
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
       <style>
+        * {
+          font-family: 'Inter', sans-serif;
+        }
         body {
-          font-family: Inter, Arial, sans-serif;
           padding: 20px;
-          background-color: #282c34;
+          color: var(--vscode-editor-foreground);
+          background-color: var(--vscode-editor-background);
         }
         h1 {
           color: #fff;
-        }
+        }        
         ol {
           margin: 0px;
-          margin-top: -22px;
           padding-inline-start: 24px;
+          line-height: 1.8;
         }
-        pre {
+        div {
           padding-left: 10px;
           padding-right: 10px;
           border-radius: 5px;
@@ -51,9 +54,9 @@ function getWebviewContent({
     <body>
       <h1>Test: ${testName}</h1>
             <h2>Summary</h2>
-      <pre>${summary}</pre>
+      <div>${summary}</div>
       <h2>Steps</h2>
-      <pre>${steps}</pre>
+      <div>${steps}</div>
     </body>
     </html>
   `;
