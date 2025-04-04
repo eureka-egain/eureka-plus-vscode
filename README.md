@@ -2,7 +2,7 @@
 
 ![logo](https://raw.githubusercontent.com/eureka-egain/eureka-plus-vscode/main/assets/logo/logo_text_banner.png "logo")
 
-Eureka Plus is a Visual Studio Code extension designed to streamline test creation, management, and execution for your projects using Playwright. It provides an intuitive tree view for managing test cases, commands for recording (codegen) and running tests, and comes bundled with all the tools requried.
+Eureka Plus is a Visual Studio Code extension designed to streamline test creation, management, and execution for your projects using Playwright. It provides an intuitive tree view for managing test cases, commands for recording (codegen) and running tests, and comes bundled with all the tools required, including Node.js and Playwright.
 
 ---
 
@@ -14,6 +14,7 @@ Eureka Plus is a Visual Studio Code extension designed to streamline test creati
 - **Customizable Settings**: Configure test folders, recording options, and more.
 - **File and Folder Watching**: Automatically updates the tree view when files or folders change.
 - **Quick Commands**: Access frequently used actions like refreshing the tree view or opening settings.
+- **AI-Powered Test Summaries**: Generate natural language summaries of test scripts using Gemini AI (requires an API key).
 
 ---
 
@@ -77,18 +78,24 @@ To test and develop the extension locally, follow these steps:
    - Press `F5` to start the extension in a new Extension Development Host window.
    - This will allow you to test the extension in a sandboxed environment.
 
-5. **Make Changes**:
+5. **Set Up Gemini AI API Key**:
+
+   - Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS).
+   - Run the `Eureka+: Update Gemini Key` command to securely store your API key for AI-powered features.
+
+6. **Make Changes**:
 
    - Modify the source code in the `src` directory as needed.
    - Save your changes, and the Extension Development Host will automatically reload.
 
-6. **Test Commands**:
+7. **Test Commands**:
 
    - Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS).
    - Run commands like `Eureka+: Record New Test` or `Eureka+: Refresh Tree View` to test functionality.
 
-7. **Debugging**:
+8. **Debugging**:
    - Use the Debug Console in the Extension Development Host to view logs and debug issues.
+   - Check the "Output" pane in VS Code under the "Eureka+" output channel for additional logs.
 
 ---
 
