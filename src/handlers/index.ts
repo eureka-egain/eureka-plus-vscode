@@ -4,7 +4,8 @@ import runTestInFolder from "./runTestInFolder";
 import runAllTests from "./runAllTests";
 import updateGenAIKey from "./updateGenAIKey";
 import generateSummary from "./generateSummary";
-import setup from "./setup/setup";
+import setupNodeJS from "./setupNodeJS";
+import initialize from "./initialize/initialize";
 
 export const handlers = {
   startNewTestRecording,
@@ -13,5 +14,6 @@ export const handlers = {
   runAllTests,
   updateGenAIKey,
   generateSummary,
-  setup,
+  setupNodeJS,
+  initialize,
 };

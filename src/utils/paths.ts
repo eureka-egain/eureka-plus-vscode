@@ -1,6 +1,20 @@
 import * as os from "os";
 import path from "path";
 import * as vscode from "vscode";
+import { common } from "./common";
+
+// --------------------------------------------------------------- WORKSPACE
+
+const getWorkspaceRoot = () => {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  const workspacePath = workspaceFolders?.[0]?.uri?.fsPath;
+  if (workspacePath) {
+    return workspacePath;
+  } else {
+    vscode.window.showErrorMessage("No workspace folder found.");
+    return null;
+  }
+};
 
 // --------------------------------------------------------------- EXTENSION
 
@@ -17,15 +31,17 @@ const getExtensionUserFolder = () => {
 
 // ---------------------------------------------------------------
 
-const getExtensionUserRuntimeFolder = () => {
-  return path.join(getExtensionUserFolder(), "runtime");
+const getExtensionRuntimeFolder = (workspaceRoot: string) => {
+  return path.join(
+    workspaceRoot,
+    common.getExtensionSettings().testsFolderName
+  );
 };
 
 // --------------------------------------------------------------- PLAYWRIGHT
-
-const getPlaywrightCLIPath = () => {
+const getPlaywrightCLIPath = (workspaceRoot: string) => {
   return path.join(
-    getExtensionUserRuntimeFolder(),
+    getExtensionRuntimeFolder(workspaceRoot),
     "node_modules",
     "playwright",
     "cli.js"
@@ -67,17 +83,10 @@ const getNPMPath = () => {
   }
 };
 
-// --------------------------------------------------------------- WORKSPACE
-
-const getWorkspaceRoot = () => {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  return workspaceFolders?.[0]?.uri?.fsPath;
-};
-
 // --------------------------------------------------------------- BROWSERS
 
 const getBrowsersPath = () => {
-  return path.join(getExtensionUserRuntimeFolder(), "browsers");
+  return path.join(getExtensionUserFolder(), "browsers");
 };
 
 // --------------------------------------------------------------- EXPORT
@@ -90,5 +99,5 @@ export const paths = {
   getPlaywrightCLIPath,
   getWorkspaceRoot,
   getBrowsersPath,
-  getExtensionUserRuntimeFolder,
+  getExtensionRuntimeFolder,
 };

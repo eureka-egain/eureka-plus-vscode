@@ -1,17 +1,13 @@
 import * as vscode from "vscode";
 import { common } from "../utils/common";
-import { movers } from "../utils/movers";
-import path from "path";
 import { paths } from "../utils/paths";
 
 export default async function ({ folderPath }: { folderPath: string }) {
-  const copyTestFolderResult =
-    movers.copyTestFolderFromWorkspaceToRuntime(folderPath);
-
-  if (copyTestFolderResult) {
-    const command = `${paths.getNodePath()} ${paths.getPlaywrightCLIPath()} test ${common.formatPathForPW(
-      copyTestFolderResult.destinationFolder
-    )} --ui`;
+  const workspaceRoot = paths.getWorkspaceRoot();
+  if (folderPath && workspaceRoot) {
+    const command = `${paths.getNodePath()} ${paths.getPlaywrightCLIPath(
+      workspaceRoot
+    )} test ${common.formatPathForPW(folderPath)} --ui`;
 
     vscode.window.withProgress(
       {
@@ -26,26 +22,20 @@ export default async function ({ folderPath }: { folderPath: string }) {
           command: command,
           args: ["--ui"],
           onExit: ({ code, resolve }) => {
-            if (code === 0) {
-              copyTestFolderResult.cleanup();
-              // move generated test results back to workspace
-              movers.moveTestResultsFolderToWorkspace();
-            } else {
+            if (code !== 0) {
               vscode.window.showErrorMessage(`Error: ${code}`);
             }
             resolve();
           },
           onError: ({ error, resolve }) => {
             vscode.window.showErrorMessage(`Error: ${error}`);
-            copyTestFolderResult.cleanup();
             resolve();
           },
           onStderr: ({ data, resolve }) => {
             vscode.window.showErrorMessage(`Error: ${data}`);
-            copyTestFolderResult.cleanup();
             resolve();
           },
-          cwd: paths.getExtensionUserRuntimeFolder(),
+          cwd: paths.getExtensionRuntimeFolder(workspaceRoot),
         });
       }
     );

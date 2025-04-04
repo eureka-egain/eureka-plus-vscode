@@ -14,8 +14,7 @@ export default function ({
   recordToPath,
 }: {
   context: vscode.ExtensionContext;
-  recordToPath: string | undefined;
-  reRecord?: boolean;
+  recordToPath: string;
 }) {
   let testNameFromConfig = "";
   /**
@@ -24,13 +23,11 @@ export default function ({
    * https://www.w3schools.com/js/tryit.asp?filename=tryjs_date_new
    */
   let initialUrlFromConfig = "";
-  if (recordToPath) {
-    const configFilePath = path.join(recordToPath, eurekaPlusConfigFileName);
-    if (fs.existsSync(configFilePath)) {
-      const configData = common.readEurekaPlusConfigFile(configFilePath);
-      testNameFromConfig = configData.testName;
-      initialUrlFromConfig = configData.initialUrl;
-    }
+  const configFilePath = path.join(recordToPath, eurekaPlusConfigFileName);
+  if (fs.existsSync(configFilePath)) {
+    const configData = common.readEurekaPlusConfigFile(configFilePath);
+    testNameFromConfig = configData.testName;
+    initialUrlFromConfig = configData.initialUrl;
   }
 
   // Prompt for the recording name
@@ -95,32 +92,39 @@ export default function ({
                 return;
               }
 
-              const tempRecordingFolder = path.join(
-                extensionRoot,
+              const recordingFolderPath = path.join(
+                recordToPath,
                 recordingName
               );
-              const tempPaths = {
+              const recordingPaths = {
                 specFile: path.join(
-                  tempRecordingFolder,
+                  recordingFolderPath,
                   `${recordingName}.spec.ts`
                 ),
-                harFile: path.join(tempRecordingFolder, `${recordingName}.har`),
+                harFile: path.join(recordingFolderPath, `${recordingName}.har`),
                 storageFile: path.join(
-                  tempRecordingFolder,
+                  recordingFolderPath,
                   `${recordingName}.json`
                 ),
               };
 
               // Create the temp recording folder
-              fs.mkdirSync(tempRecordingFolder);
+              fs.mkdirSync(recordingFolderPath);
 
               // Run codegen to start the recording
+              console.log(
+                `${paths.getNodePath()} ${paths.getPlaywrightCLIPath(
+                  workspaceRoot
+                )} codegen`
+              );
               return common.runProcess({
-                command: `${paths.getNodePath()} ${paths.getPlaywrightCLIPath()} codegen`,
+                command: `${paths.getNodePath()} ${paths.getPlaywrightCLIPath(
+                  workspaceRoot
+                )} codegen`,
                 args: [
-                  `--output=${tempPaths.specFile}`,
-                  `--save-storage=${tempPaths.storageFile}`,
-                  `--save-har=${tempPaths.harFile}`,
+                  `--output=${recordingPaths.specFile}`,
+                  `--save-storage=${recordingPaths.storageFile}`,
+                  `--save-har=${recordingPaths.harFile}`,
                   `--save-har-glob="${
                     common.getExtensionSettings().recordingHARBlob
                   }"`,
@@ -141,7 +145,7 @@ export default function ({
                       initialUrl: initialUrl,
                     };
                     const configFilePath = path.join(
-                      tempRecordingFolder,
+                      recordingFolderPath,
                       eurekaPlusConfigFileName
                     );
                     fs.writeFileSync(
@@ -149,25 +153,10 @@ export default function ({
                       JSON.stringify(configData)
                     );
 
-                    // move test folder to workspace
-                    const testLocationInWorkspace = recordToPath
-                      ? path.join(recordToPath, recordingName)
-                      : path.join(
-                          workspaceRoot,
-                          common.getExtensionSettings().testsFolderName,
-                          recordingName
-                        );
-                    if (!fs.existsSync(testLocationInWorkspace)) {
-                      fs.mkdir(testLocationInWorkspace);
-                    }
-                    fs.moveSync(tempRecordingFolder, testLocationInWorkspace, {
-                      overwrite: true,
-                    });
-
                     vscode.workspace
                       .openTextDocument(
                         path.join(
-                          testLocationInWorkspace,
+                          recordingFolderPath,
                           `${recordingName}.spec.ts`
                         )
                       )
@@ -176,9 +165,6 @@ export default function ({
                     vscode.window.showErrorMessage(
                       `Test recording process exited with code ${code}`
                     );
-                    if (fs.existsSync(tempRecordingFolder)) {
-                      fs.removeSync(tempRecordingFolder);
-                    }
                   }
                   resolve();
                 },
@@ -186,9 +172,6 @@ export default function ({
                   vscode.window.showErrorMessage(
                     `Error starting the test recording: ${error.message}`
                   );
-                  if (fs.existsSync(tempRecordingFolder)) {
-                    fs.removeSync(tempRecordingFolder);
-                  }
                   resolve();
                 },
               });

@@ -44,10 +44,7 @@ export class TreeViewProvider implements vscode.TreeDataProvider<TreeItem> {
       if (fs.existsSync(path.join(workspaceRoot, testsFolderName))) {
         // Create a file system watcher for the workspace folder
         this.fileWatcher = vscode.workspace.createFileSystemWatcher(
-          new vscode.RelativePattern(
-            workspaceRoot,
-            "**/*"
-          )
+          new vscode.RelativePattern(workspaceRoot, "**/*")
         );
 
         // Listen for file changes
@@ -65,6 +62,13 @@ export class TreeViewProvider implements vscode.TreeDataProvider<TreeItem> {
     for (const fileOrFolder of filesAndFolders) {
       const fullPath = path.join(dir, fileOrFolder);
       const isDirectory = fs.statSync(fullPath).isDirectory();
+
+      if (
+        fileOrFolder.includes("node_modules") ||
+        fileOrFolder.includes("test-results")
+      ) {
+        continue;
+      }
 
       if (isDirectory) {
         items.push(
@@ -99,12 +103,37 @@ export class TreeViewProvider implements vscode.TreeDataProvider<TreeItem> {
   getChildren(element?: TreeItem): Thenable<TreeItem[]> {
     if (!this.workspaceRoot) {
       vscode.window.showInformationMessage("No workspace folder found");
+      vscode.commands.executeCommand(
+        "setContext",
+        "eplusTestsView.hasWorkspace",
+        false
+      );
       return Promise.resolve([]);
+    } else {
+      vscode.commands.executeCommand(
+        "setContext",
+        "eplusTestsView.hasWorkspace",
+        true
+      );
     }
 
-    const eplusTestsPath = path.join(this.workspaceRoot, "eplus-tests");
+    const eplusTestsPath = path.join(
+      this.workspaceRoot,
+      common.getExtensionSettings().testsFolderName
+    );
     if (!fs.existsSync(eplusTestsPath)) {
+      vscode.commands.executeCommand(
+        "setContext",
+        "eplusTestsView.hasTestsFolder",
+        false
+      );
       return Promise.resolve([]);
+    } else {
+      vscode.commands.executeCommand(
+        "setContext",
+        "eplusTestsView.hasTestsFolder",
+        true
+      );
     }
 
     if (element) {

@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { TreeViewProvider } from "./providers/TreeViewProvider";
 import { handlers } from "./handlers";
 import path from "path";
-import { secretStorageGeminiAPITokenKey } from "./utils/constants";
+import { paths } from "./utils/paths";
 
 export function activate(context: vscode.ExtensionContext) {
   // Register the Tree View
@@ -10,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // ---------------------------------------------------------------
 
-  handlers.setup(context);
+  handlers.setupNodeJS();
 
   // ---------------------------------------------------------------
 
@@ -32,14 +32,14 @@ export function activate(context: vscode.ExtensionContext) {
     )
   );
 
-  // INSTALL DEPENDENCIES
+  // INITIALIZE
   context.subscriptions.push(
-    vscode.commands.registerCommand("egain-eureka-plus.setup", () => {
-      handlers.setup(context);
+    vscode.commands.registerCommand("egain-eureka-plus.initialize", () => {
+      handlers.initialize();
     })
   );
 
-  // UPDATE GENAI KEY
+  // UPDATE GEMINI KEY
   context.subscriptions.push(
     vscode.commands.registerCommand("egain-eureka-plus.updateGenAIKey", () => {
       handlers.updateGenAIKey(context);
@@ -58,10 +58,16 @@ export function activate(context: vscode.ExtensionContext) {
   // START NEW RECORDING
   context.subscriptions.push(
     vscode.commands.registerCommand("egain-eureka-plus.recordNewTest", () => {
-      handlers.startNewTestRecording({
-        context,
-        recordToPath: treeDataProvider.selectedFolderPath,
-      });
+      const workspaceRoot = paths.getWorkspaceRoot();
+      if (workspaceRoot) {
+        const extensionRuntimePath =
+          paths.getExtensionRuntimeFolder(workspaceRoot);
+        handlers.startNewTestRecording({
+          context,
+          recordToPath:
+            treeDataProvider.selectedFolderPath || extensionRuntimePath,
+        });
+      }
     })
   );
 

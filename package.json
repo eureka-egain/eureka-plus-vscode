@@ -24,7 +24,7 @@
       "properties": {
         "Eureka+.testsFolderName": {
           "type": "string",
-          "default": "eplus-tests",
+          "default": "eureka-plus",
           "description": "Specifies the folder where Eureka+ reads existing tests and records new ones."
         },
         "Eureka+.recordingHARBlob": {
@@ -43,6 +43,18 @@
         }
       ]
     },
+    "viewsWelcome": [
+      {
+        "view": "eplusTestsView",
+        "contents": "In order to use Eureka+, please open a folder or workspace first.",
+        "when": "!eplusTestsView.hasWorkspace"
+      },
+      {
+        "view": "eplusTestsView",
+        "contents": "Eureka+ has not yet been initialized in this workspace.\n[Initialize Eureka+](command:egain-eureka-plus.initialize)\n",
+        "when": "!eplusTestsView.hasTestsFolder"
+      }
+    ],
     "commands": [
       {
         "command": "egain-eureka-plus.extensionSettings",
@@ -50,8 +62,8 @@
         "icon": "$(gear)"
       },
       {
-        "command": "egain-eureka-plus.setup",
-        "title": "Setup Eureka+"
+        "command": "egain-eureka-plus.initialize",
+        "title": "Initialize Eureka+"
       },
       {
         "command": "egain-eureka-plus.updateGenAIKey",
@@ -146,11 +158,6 @@
           "command": "egain-eureka-plus.updateGenAIKey",
           "when": "view == eplusTestsView",
           "group": "1_inline@2"
-        },
-        {
-          "command": "egain-eureka-plus.setup",
-          "when": "view == eplusTestsView",
-          "group": "2_inline@2"
         },
         {
           "command": "egain-eureka-plus.refreshTreeView",

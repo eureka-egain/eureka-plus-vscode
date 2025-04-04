@@ -1,14 +1,12 @@
-import * as vscode from "vscode";
-import * as os from "os";
-import fs from "fs-extra";
 import { spawn } from "child_process";
+import fs from "fs-extra";
+import * as vscode from "vscode";
 import {
   defaultTestsFolderName,
   eurekaPlusConfigFileVersion,
 } from "./constants";
-import { EurekaPlusConfigFile } from "./types";
-import path from "path";
 import { paths } from "./paths";
+import { EurekaPlusConfigFile } from "./types";
 
 // ---------------------------------------------------------------
 
