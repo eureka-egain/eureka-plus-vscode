@@ -11,7 +11,6 @@ const getWorkspaceRoot = () => {
   if (workspacePath) {
     return workspacePath;
   } else {
-    vscode.window.showErrorMessage("No workspace folder found.");
     return null;
   }
 };

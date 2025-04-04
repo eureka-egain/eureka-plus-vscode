@@ -53,4 +53,6 @@ export default async function () {
       });
     }
   }
+
+  vscode.commands.executeCommand("egain-eureka-plus.refreshTreeView");
 }

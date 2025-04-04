@@ -14,7 +14,8 @@
     "Testing"
   ],
   "activationEvents": [
-    "onStartupFinished"
+    "onStartupFinished",
+    "workspaceContains:**/eureka-plus/**"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -46,13 +47,13 @@
     "viewsWelcome": [
       {
         "view": "eplusTestsView",
-        "contents": "In order to use Eureka+, please open a folder or workspace first.",
+        "contents": "In order to use Eureka+, please open a folder or workspace.",
         "when": "!eplusTestsView.hasWorkspace"
       },
       {
         "view": "eplusTestsView",
         "contents": "Eureka+ has not yet been initialized in this workspace.\n[Initialize Eureka+](command:egain-eureka-plus.initialize)\n",
-        "when": "!eplusTestsView.hasTestsFolder"
+        "when": "eplusTestsView.hasWorkspace && !eplusTestsView.hasTestsFolder"
       }
     ],
     "commands": [
@@ -129,22 +130,22 @@
       "view/item/context": [
         {
           "command": "egain-eureka-plus.runAllTestsInFolder",
-          "when": "view == eplusTestsView && viewItem == testFolder",
+          "when": "view == eplusTestsView && viewItem == testFolder && eplusTestsView.hasWorkspace && eplusTestsView.hasTestsFolder",
           "group": "inline@1"
         },
         {
           "command": "egain-eureka-plus.runTest",
-          "when": "view == eplusTestsView && viewItem == testFile",
+          "when": "view == eplusTestsView && viewItem == testFile && eplusTestsView.hasWorkspace && eplusTestsView.hasTestsFolder",
           "group": "inline@1"
         },
         {
           "command": "egain-eureka-plus.viewTestSummary",
-          "when": "view == eplusTestsView && viewItem == testFile",
+          "when": "view == eplusTestsView && viewItem == testFile && eplusTestsView.hasWorkspace && eplusTestsView.hasTestsFolder",
           "group": "inline@2"
         },
         {
           "command": "egain-eureka-plus.reRecordTest",
-          "when": "view == eplusTestsView && viewItem == testFile",
+          "when": "view == eplusTestsView && viewItem == testFile && eplusTestsView.hasWorkspace && eplusTestsView.hasTestsFolder",
           "group": "inline@3"
         }
       ],
@@ -166,12 +167,12 @@
         },
         {
           "command": "egain-eureka-plus.recordNewTest",
-          "when": "view == eplusTestsView",
+          "when": "view == eplusTestsView && eplusTestsView.hasWorkspace && eplusTestsView.hasTestsFolder",
           "group": "navigation@2"
         },
         {
           "command": "egain-eureka-plus.runAllTests",
-          "when": "view == eplusTestsView",
+          "when": "view == eplusTestsView && eplusTestsView.hasWorkspace && eplusTestsView.hasTestsFolder",
           "group": "navigation@3"
         }
       ]

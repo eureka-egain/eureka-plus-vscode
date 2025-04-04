@@ -41,10 +41,10 @@ export class TreeViewProvider implements vscode.TreeDataProvider<TreeItem> {
   constructor(private workspaceRoot: string | undefined) {
     if (workspaceRoot) {
       const testsFolderName = common.getExtensionSettings().testsFolderName;
-      if (fs.existsSync(path.join(workspaceRoot, testsFolderName))) {
+      if (fs.existsSync(workspaceRoot)) {
         // Create a file system watcher for the workspace folder
         this.fileWatcher = vscode.workspace.createFileSystemWatcher(
-          new vscode.RelativePattern(workspaceRoot, "**/*")
+          new vscode.RelativePattern(workspaceRoot, `*/**`)
         );
 
         // Listen for file changes
@@ -54,6 +54,22 @@ export class TreeViewProvider implements vscode.TreeDataProvider<TreeItem> {
       }
     }
   }
+
+  private setHasTestsFolderViewContext = (hasTestsFolder: boolean) => {
+    vscode.commands.executeCommand(
+      "setContext",
+      "eplusTestsView.hasTestsFolder",
+      hasTestsFolder
+    );
+  };
+
+  private setHasWorkspaceViewContext = (hasWorkspace: boolean) => {
+    vscode.commands.executeCommand(
+      "setContext",
+      "eplusTestsView.hasWorkspace",
+      hasWorkspace
+    );
+  };
 
   private getFilesAndFolders(dir: string): TreeItem[] {
     const items: TreeItem[] = [];
@@ -102,19 +118,10 @@ export class TreeViewProvider implements vscode.TreeDataProvider<TreeItem> {
 
   getChildren(element?: TreeItem): Thenable<TreeItem[]> {
     if (!this.workspaceRoot) {
-      vscode.window.showInformationMessage("No workspace folder found");
-      vscode.commands.executeCommand(
-        "setContext",
-        "eplusTestsView.hasWorkspace",
-        false
-      );
+      this.setHasWorkspaceViewContext(false);
       return Promise.resolve([]);
     } else {
-      vscode.commands.executeCommand(
-        "setContext",
-        "eplusTestsView.hasWorkspace",
-        true
-      );
+      this.setHasWorkspaceViewContext(true);
     }
 
     const eplusTestsPath = path.join(
@@ -122,18 +129,10 @@ export class TreeViewProvider implements vscode.TreeDataProvider<TreeItem> {
       common.getExtensionSettings().testsFolderName
     );
     if (!fs.existsSync(eplusTestsPath)) {
-      vscode.commands.executeCommand(
-        "setContext",
-        "eplusTestsView.hasTestsFolder",
-        false
-      );
+      this.setHasTestsFolderViewContext(false);
       return Promise.resolve([]);
     } else {
-      vscode.commands.executeCommand(
-        "setContext",
-        "eplusTestsView.hasTestsFolder",
-        true
-      );
+      this.setHasTestsFolderViewContext(true);
     }
 
     if (element) {
