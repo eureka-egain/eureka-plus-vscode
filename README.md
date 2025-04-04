@@ -1,6 +1,6 @@
 # Eureka Plus VS Code Extension
 
-![logo](https://github.com/eureka-egain/eureka-plus-vscode/blob/main/assets/logo/logo_text.png, "logo")
+![logo](https://raw.githubusercontent.com/eureka-egain/eureka-plus-vscode/main/assets/logo/logo_text_banner.png "logo")
 
 Eureka Plus is a Visual Studio Code extension designed to streamline test creation, management, and execution for your projects using Playwright. It provides an intuitive tree view for managing test cases, commands for recording (codegen) and running tests, and comes bundled with all the tools requried.
 
