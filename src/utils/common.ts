@@ -15,7 +15,8 @@ const getExtensionSettings = () => {
   return {
     testsFolderName:
       config.get<string>("testsFolderName") || defaultTestsFolderName,
-    recordingHARBlob: config.get<string>("recordingHARBlob") || "**/system/**",
+    recordingRequestIncludeFilter:
+      config.get<string>("recordingRequestIncludeFilter") || "!(**:3000**)",
   };
 };
 

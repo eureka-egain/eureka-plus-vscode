@@ -126,7 +126,7 @@ export default function ({
                   `--save-storage=${recordingPaths.storageFile}`,
                   `--save-har=${recordingPaths.harFile}`,
                   `--save-har-glob="${
-                    common.getExtensionSettings().recordingHARBlob
+                    common.getExtensionSettings().recordingRequestIncludeFilter
                   }"`,
                   "--ignore-https-errors",
                   initialUrl,

@@ -28,9 +28,9 @@
           "default": "eureka-plus",
           "description": "Specifies the folder where Eureka+ reads existing tests and records new ones."
         },
-        "Eureka+.recordingHARBlob": {
+        "Eureka+.recordingRequestIncludeFilter": {
           "type": "string",
-          "default": "**/system/**",
+          "default": "!(**:3000**)",
           "description": "Specifies the type of requests to be recorded in the HAR file. Recording all requests will lead to large HAR files."
         }
       }
