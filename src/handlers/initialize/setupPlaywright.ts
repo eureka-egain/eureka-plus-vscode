@@ -6,6 +6,7 @@ import {
   playwrightLibraryPath,
   playwrightTestLibraryPath,
 } from "../../utils/constants";
+import path from "path";
 
 export default async function ({ workspaceRoot }: { workspaceRoot: string }) {
   return new Promise<void>((resolve) => {
@@ -27,7 +28,7 @@ export default async function ({ workspaceRoot }: { workspaceRoot: string }) {
         await common.runProcess({
           // env with the path to the browsers folder
           // is setup in the common.ts file
-          command: `${pathToNode} ${npmPath} init -y && ${pathToNode} ${npmPath} install @playwright/test@${playwrightTestLibraryPath} playwright@${playwrightLibraryPath}`,
+          command: `${pathToNode} ${npmPath} init -y && ${pathToNode} ${npmPath} install @playwright/test@${playwrightTestLibraryPath} playwright@${playwrightLibraryPath} && ${pathToNode} ${npmPath} install -D @types/node typescript`,
           cwd: paths.getExtensionRuntimeFolder(workspaceRoot),
           onStderr(props) {
             console.log("npm stderr:", props.data);
@@ -54,6 +55,20 @@ export default async function ({ workspaceRoot }: { workspaceRoot: string }) {
             }
           },
         });
+
+        // create tsconfig.json
+        const tsconfigPath = paths.getExtensionRuntimeFolder(workspaceRoot);
+        const tsconfig = {
+          compilerOptions: {
+            types: ["node"],
+            esModuleInterop: true,
+          },
+        };
+        fs.writeFileSync(
+          path.join(tsconfigPath, "tsconfig.json"),
+          JSON.stringify(tsconfig, null, 2)
+        );
+
         resolve();
       }
     );
