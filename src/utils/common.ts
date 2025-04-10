@@ -17,7 +17,7 @@ const getExtensionSettings = () => {
       config.get<string>("testsFolderName") || defaultTestsFolderName,
     recordingRequestIncludeFilter:
       config.get<string>("recordingRequestIncludeFilter") ||
-      "!http://localhost:3000/**",
+      "/^(?!.*:3000).+$/",
   };
 };
 

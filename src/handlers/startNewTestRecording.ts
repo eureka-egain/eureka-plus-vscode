@@ -16,7 +16,7 @@ export default function ({
   context: vscode.ExtensionContext;
   recordToPath: string;
 }) {
-  let testNameFromConfig = "";
+  let testNameFromConfig = "default";
   /**
    * URLS:
    * https://microsoft.github.io/vscode-codicons/dist/codicon.html
@@ -36,6 +36,13 @@ export default function ({
       prompt: "Enter a name for your new test recording",
       placeHolder: "e.g. Article form invalid value validation",
       value: testNameFromConfig,
+      validateInput: (value) => {
+        const recordingFolderPath = path.join(recordToPath, value);
+        if (fs.existsSync(recordingFolderPath)) {
+          return `Test case with this name already exists in selected path`;
+        }
+        return null;
+      },
       ignoreFocusOut: true,
       title: "Test Name",
     })
@@ -107,16 +114,14 @@ export default function ({
                   `${recordingName}.json`
                 ),
               };
+              let harURLFilterSetting =
+                common.getExtensionSettings().recordingRequestIncludeFilter;
+              harURLFilterSetting = harURLFilterSetting.replace(/^\/|\/$/g, "");
 
               // Create the temp recording folder
               fs.mkdirSync(recordingFolderPath);
 
               // Run codegen to start the recording
-              console.log(
-                `${paths.getNodePath()} ${paths.getPlaywrightCLIPath(
-                  workspaceRoot
-                )} codegen`
-              );
               return common.runProcess({
                 command: `${paths.getNodePath()} ${paths.getPlaywrightCLIPath(
                   workspaceRoot
@@ -125,9 +130,7 @@ export default function ({
                   `--output=${recordingPaths.specFile}`,
                   `--save-storage=${recordingPaths.storageFile}`,
                   `--save-har=${recordingPaths.harFile}`,
-                  `--save-har-glob=${
-                    common.getExtensionSettings().recordingRequestIncludeFilter
-                  }`,
+                  `--save-har-glob='${harURLFilterSetting}'`,
                   "--ignore-https-errors",
                   initialUrl,
                 ],

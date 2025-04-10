@@ -30,8 +30,8 @@
         },
         "Eureka+.recordingRequestIncludeFilter": {
           "type": "string",
-          "default": "!http://localhost:3000/**",
-          "description": "Specifies the type of requests to be recorded in the HAR file. Recording all requests will lead to large HAR files."
+          "default": "/^(?!.*:3000).+$/",
+          "description": "Regular expression to specifie the type of requests to be recorded in the HAR file. Recording all requests will lead to large HAR files."
         }
       }
     },
