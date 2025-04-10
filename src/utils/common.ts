@@ -11,12 +11,13 @@ import { EurekaPlusConfigFile } from "./types";
 // ---------------------------------------------------------------
 
 const getExtensionSettings = () => {
-  const config = vscode.workspace.getConfiguration("egain-eureka-plus");
+  const config = vscode.workspace.getConfiguration("Eureka+");
   return {
     testsFolderName:
       config.get<string>("testsFolderName") || defaultTestsFolderName,
     recordingRequestIncludeFilter:
-      config.get<string>("recordingRequestIncludeFilter") || "!(**:3000**)",
+      config.get<string>("recordingRequestIncludeFilter") ||
+      "!http://localhost:3000/**",
   };
 };
 

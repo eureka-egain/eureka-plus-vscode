@@ -125,9 +125,9 @@ export default function ({
                   `--output=${recordingPaths.specFile}`,
                   `--save-storage=${recordingPaths.storageFile}`,
                   `--save-har=${recordingPaths.harFile}`,
-                  `--save-har-glob="${
+                  `--save-har-glob=${
                     common.getExtensionSettings().recordingRequestIncludeFilter
-                  }"`,
+                  }`,
                   "--ignore-https-errors",
                   initialUrl,
                 ],
