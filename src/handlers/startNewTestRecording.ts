@@ -30,6 +30,20 @@ export default function ({
     initialUrlFromConfig = configData.initialUrl;
   }
 
+  const harURLFilterSetting =
+    common.getExtensionSettings().recordingRequestIncludeFilter;
+  const harURLFilter = harURLFilterSetting.replace(/^\/|\/$/g, "");
+
+  // check if RegExp is valid
+  try {
+    new RegExp(harURLFilter);
+  } catch (error) {
+    vscode.window.showErrorMessage(
+      "Invalid regular expression specified for request recording. Please check Eureka+ settings."
+    );
+    return;
+  }
+
   // Prompt for the recording name
   vscode.window
     .showInputBox({
@@ -114,9 +128,6 @@ export default function ({
                   `${recordingName}.json`
                 ),
               };
-              let harURLFilterSetting =
-                common.getExtensionSettings().recordingRequestIncludeFilter;
-              harURLFilterSetting = harURLFilterSetting.replace(/^\/|\/$/g, "");
 
               // Create the temp recording folder
               fs.mkdirSync(recordingFolderPath);
@@ -130,7 +141,7 @@ export default function ({
                   `--output=${recordingPaths.specFile}`,
                   `--save-storage=${recordingPaths.storageFile}`,
                   `--save-har=${recordingPaths.harFile}`,
-                  `--save-har-glob='${harURLFilterSetting}'`,
+                  `--save-har-glob='${harURLFilter}'`,
                   "--ignore-https-errors",
                   initialUrl,
                 ],
