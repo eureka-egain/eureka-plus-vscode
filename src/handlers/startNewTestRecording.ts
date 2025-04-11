@@ -141,7 +141,7 @@ export default function ({
                   `--output=${recordingPaths.specFile}`,
                   `--save-storage=${recordingPaths.storageFile}`,
                   `--save-har=${recordingPaths.harFile}`,
-                  `--save-har-glob='${harURLFilterSetting}'`,
+                  `--save-har-glob='${harURLFilter}'`,
                   "--ignore-https-errors",
                   initialUrl,
                 ],
