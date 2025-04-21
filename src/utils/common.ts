@@ -106,6 +106,9 @@ const runProcess = ({
     });
 
     process.stderr.on("data", (data) => {
+      vscode.window.showErrorMessage(
+        `StdError running command: ${command} ${args?.join(" ") || ""}`
+      );
       onStderr?.({
         data: data.toString(),
         resolve,
@@ -122,6 +125,9 @@ const runProcess = ({
           reject,
         });
       } else {
+        vscode.window.showErrorMessage(
+          `Error running command: ${command} ${args?.join(" ") || ""}`
+        );
         onExit?.({
           code,
           resolve,
