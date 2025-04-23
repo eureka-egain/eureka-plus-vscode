@@ -5,9 +5,9 @@ import { paths } from "../utils/paths";
 export default async function ({ folderPath }: { folderPath: string }) {
   const workspaceRoot = paths.getWorkspaceRoot();
   if (folderPath && workspaceRoot) {
-    const command = `${paths.getNodePath()} ${paths.getPlaywrightCLIPath(
+    const command = `"${paths.getNodePath()}" "${paths.getPlaywrightCLIPath(
       workspaceRoot
-    )} test ${common.formatPathForPW(folderPath)} --ui`;
+    )}" test "${common.formatPathForPW(folderPath)}" --ui`;
 
     vscode.window.withProgress(
       {

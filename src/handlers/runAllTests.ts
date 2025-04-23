@@ -11,9 +11,9 @@ export default async function () {
     const pathToTestFolder = path.join(workspaceRoot, testsFolderName);
 
     if (pathToTestFolder) {
-      const command = `${paths.getNodePath()} ${paths.getPlaywrightCLIPath(
+      const command = `"${paths.getNodePath()}" "${paths.getPlaywrightCLIPath(
         workspaceRoot
-      )} test ${common.formatPathForPW(pathToTestFolder)} --ui`;
+      )}" test "${common.formatPathForPW(pathToTestFolder)}" --ui`;
 
       vscode.window.withProgress(
         {
