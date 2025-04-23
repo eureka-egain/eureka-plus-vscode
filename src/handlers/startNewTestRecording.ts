@@ -134,7 +134,7 @@ export default function ({
 
               // Run codegen to start the recording
               return common.runProcess({
-                command: `"${paths.getNodePath()}" "${paths.getPlaywrightCLIPath(
+                command: `${paths.getNodePath()} "${paths.getPlaywrightCLIPath(
                   workspaceRoot
                 )}" codegen`,
                 args: [

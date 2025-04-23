@@ -15,9 +15,9 @@ export default async function ({ workspaceRoot }: { workspaceRoot: string }) {
         message: "Installing browsers for Playwright...",
       });
 
-      const browserInstallCommand = `${paths.getNodePath()} ${paths.getPlaywrightCLIPath(
+      const browserInstallCommand = `${paths.getNodePath()} "${paths.getPlaywrightCLIPath(
         workspaceRoot
-      )} install`;
+      )}" install`;
       await common.runProcess({
         // env with the path to the browsers folder
         // is setup in the common.ts file
@@ -52,9 +52,9 @@ export default async function ({ workspaceRoot }: { workspaceRoot: string }) {
           message: "Installing Linux dependencies...",
         });
 
-        const depsInstallCommand = `${paths.getNodePath()} ${paths.getPlaywrightCLIPath(
+        const depsInstallCommand = `${paths.getNodePath()} "${paths.getPlaywrightCLIPath(
           workspaceRoot
-        )} install-deps`;
+        )}" install-deps`;
         await common.runProcess({
           command: depsInstallCommand,
           cwd: paths.getExtensionRuntimeFolder(workspaceRoot),

@@ -13,7 +13,7 @@ export default async function ({
   const workspaceRoot = paths.getWorkspaceRoot();
 
   if (workspaceRoot) {
-    const command = `"${paths.getNodePath()}" "${paths.getPlaywrightCLIPath(
+    const command = `${paths.getNodePath()} "${paths.getPlaywrightCLIPath(
       workspaceRoot
     )}" test "${common.formatPathForPW(
       path.join(testFolderPath, testFileName)
