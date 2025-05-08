@@ -7,7 +7,7 @@ export const eurekaPlusConfigFileVersion = "1.0";
 export const secretStorageGeminiAPITokenKey = "googleGenerativeAIKey";
 // ---------------------------------------------------------------
 export const playwrightTestLibraryPath =
-  "https://github.com/eureka-egain/eureka-plus/releases/download/1.51.0-1.0.2/pw-test.tgz";
+  "https://github.com/eureka-egain/eureka-plus/releases/download/1.51.0-1.1.1/pw-test.tgz";
 export const playwrightLibraryPath =
-  "https://github.com/eureka-egain/eureka-plus/releases/download/1.51.0-1.0.2/pw.tgz";
+  "https://github.com/eureka-egain/eureka-plus/releases/download/1.51.0-1.1.1/pw.tgz";
 // ---------------------------------------------------------------
